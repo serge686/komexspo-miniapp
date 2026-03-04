@@ -310,3 +310,76 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
 .section-title{
   text-align:center;
 }
+
+/* ===== Apple-style centered container (safe for all platforms) ===== */
+
+/* общий контейнер: ровные отступы и ограничение ширины */
+.screen{
+  /* оставляем твой padding снизу, но добавляем iOS-like колонку */
+  max-width: 720px;          /* “приятная” ширина как в iOS */
+  margin-left: auto;
+  margin-right: auto;
+
+  /* чуть более “воздушные” боковые отступы */
+  padding-left: 18px;
+  padding-right: 18px;
+
+  /* центрируем основной текст */
+  text-align: center;
+}
+
+/* заголовки/текст по центру */
+.h1,
+.lead,
+.section-title{
+  text-align: center;
+}
+
+/* pill по центру */
+.hero-pill{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* кнопки по центру */
+.actions{
+  justify-content: center;
+}
+
+/* cards: в колонке и аккуратно */
+.cards{
+  width: 100%;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* внутри карточек текст лучше слева (по-iOS) */
+.card{
+  text-align: left;
+}
+
+/* формы: в колонке, аккуратно */
+.form{
+  width: 100%;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* на очень широких экранах можно чуть шире, чтобы не было “пусто” */
+@media (min-width: 1100px){
+  .screen,
+  .cards,
+  .form{
+    max-width: 860px;
+  }
+}
+
+/* на очень узких — всё остаётся как есть */
+@media (max-width: 420px){
+  .screen{
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
