@@ -383,3 +383,12 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
     padding-right: 16px;
   }
 }
+
+/* ===== Perfect center text in bottom tabs ===== */
+
+.tabs .tab{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
