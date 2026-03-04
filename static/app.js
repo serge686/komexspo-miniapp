@@ -1,9 +1,6 @@
 (() => {
   const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
+  if (tg) { tg.ready(); tg.expand(); }
 
   const state = {
     screen: "home",
@@ -22,12 +19,12 @@
     resultText: ""
   };
 
+  const qs = (sel) => document.querySelector(sel);
+  const qsa = (sel) => [...document.querySelectorAll(sel)];
+
   function track(name, data = {}) {
     state.events.push({ name, data, ts: Date.now() });
   }
-
-  function qs(sel) { return document.querySelector(sel); }
-  function qsa(sel) { return [...document.querySelectorAll(sel)]; }
 
   function setScreen(next, pushHistory = true) {
     if (pushHistory) state.history.push(state.screen);
@@ -37,20 +34,38 @@
 
   function back() {
     const prev = state.history.pop();
-    if (prev) {
-      state.screen = prev;
-      render();
-    } else {
-      setScreen("home", false);
-    }
+    state.screen = prev || "home";
+    render();
   }
 
-  // Deep link ?screen=quiz
-  (function initFromQuery(){
-    const p = new URLSearchParams(location.search);
-    const s = p.get("screen");
-    if (s) state.screen = s;
-  })();
+  function getTgUser() {
+    try { return tg?.initDataUnsafe?.user || null; } catch { return null; }
+  }
+
+  function escapeHtml(s){ return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+  function escapeAttr(s){ return escapeHtml(s).replaceAll('"',"&quot;"); }
+
+  function inputField(label, id, value="") {
+    return `
+      <div class="field">
+        <label>${label}</label>
+        <input class="input" id="${id}" value="${escapeAttr(value)}" />
+      </div>
+    `;
+  }
+
+  function selectField(label, key, options) {
+    const v = state.quiz[key] || "";
+    return `
+      <div class="field">
+        <label>${label}</label>
+        <select class="select" id="q_${key}">
+          <option value="">— выбрать —</option>
+          ${options.map(o => `<option ${v===o?"selected":""} value="${escapeAttr(o)}">${o}</option>`).join("")}
+        </select>
+      </div>
+    `;
+  }
 
   function homeScreen() {
     track("open_app");
@@ -117,12 +132,12 @@
       <div class="section-title">Услуги / Пакеты</div>
       <div class="lead">Выберите пакет — добавим в заявку, менеджер предложит комплектацию и бюджет.</div>
 
-      <div class="cards" style="grid-template-columns: repeat(2, minmax(0,1fr));">
+      <div class="cards two">
         ${items.map(it => `
           <div class="card">
             <b>${it.key}</b>
             <small>${it.desc}</small>
-            <div style="margin-top:10px; color:#3b3b44; font-size:13px;">
+            <div class="bullets">
               ${it.bullets.map(b => `• ${b}`).join("<br/>")}
             </div>
             <div class="row" style="margin-top:12px;">
@@ -141,9 +156,11 @@
       {t:"HR-Helpdesk (Ритейл)", d:"Снизили нагрузку HR на типовых вопросах, ускорили ответы сотрудникам."},
       {t:"Онбординг (Производство)", d:"Быстрее вывод новичков на план, меньше ошибок в первые недели."},
     ];
+
     return `
       <div class="section-title">Кейсы</div>
       <div class="lead">Короткие демо-примеры. В заявке укажите отрасль — покажем релевантные кейсы.</div>
+
       <div class="cards">
         ${demos.map(x => `
           <div class="card">
@@ -162,18 +179,26 @@
 
   function leadScreen() {
     const user = getTgUser();
+    const nameFromTg = user?.first_name ? `${user.first_name}${user.last_name ? " " + user.last_name : ""}` : "";
+
     return `
       <div class="section-title">Заявка</div>
       <div class="lead">Оставьте контакт и вводные. Telegram-данные подставим автоматически.</div>
 
       <div class="form">
-        ${inputField("Имя", "name", user?.first_name ? `${user.first_name}${user.last_name ? " " + user.last_name : ""}` : "")}
+        ${inputField("Имя", "name", nameFromTg)}
         ${inputField("Телефон", "phone", "")}
         ${inputField("Компания", "company", "")}
         ${inputField("Объём найма (в месяц)", "hiring_volume", "")}
         ${inputField("Тип вакансий", "vacancy_types", state.quiz.roles || "")}
-        ${selectLeadField("Способ связи", "contact_method", ["Telegram","WhatsApp","Звонок","Email"])}
-        <div class="field" style="grid-column:1/-1;">
+        <div class="field">
+          <label>Способ связи</label>
+          <select class="select" id="contact_method">
+            ${["Telegram","WhatsApp","Звонок","Email"].map(o => `<option value="${escapeAttr(o)}">${o}</option>`).join("")}
+          </select>
+        </div>
+
+        <div class="field full">
           <label>Комментарий</label>
           <textarea class="input" id="comment" placeholder="Например: срочно закрыть 5 sales, нужна автоматизация скрининга..."></textarea>
         </div>
@@ -214,54 +239,14 @@
     `;
   }
 
-  function inputField(label, id, value="") {
-    return `
-      <div class="field">
-        <label>${label}</label>
-        <input class="input" id="${id}" value="${escapeAttr(value)}" />
-      </div>
-    `;
-  }
-
-  function selectField(label, key, options) {
-    const v = state.quiz[key] || "";
-    return `
-      <div class="field">
-        <label>${label}</label>
-        <select class="select" id="q_${key}">
-          <option value="">— выбрать —</option>
-          ${options.map(o => `<option ${v===o?"selected":""} value="${escapeAttr(o)}">${o}</option>`).join("")}
-        </select>
-      </div>
-    `;
-  }
-
-  function selectLeadField(label, id, options) {
-    return `
-      <div class="field">
-        <label>${label}</label>
-        <select class="select" id="${id}">
-          ${options.map(o => `<option value="${escapeAttr(o)}">${o}</option>`).join("")}
-        </select>
-      </div>
-    `;
-  }
-
-  function getTgUser() {
-    try { return tg?.initDataUnsafe?.user || null; } catch { return null; }
-  }
-
   function buildRecommendation() {
     const q = state.quiz;
     let roles = [];
     let format = "под ключ";
 
-    const hires = q.hires_per_month;
-    const urgent = q.urgency;
-
-    if (hires === "11–30" || hires === "30+") roles.push("Сорсинг + скрининг");
+    if (q.hires_per_month === "11–30" || q.hires_per_month === "30+") roles.push("Сорсинг + скрининг");
     if (q.roles === "Смешанные" || q.roles === "Операционка") roles.push("AI-рекрутинг под ключ");
-    if (urgent === "Нужно вчера") roles.push("AI-рекрутер (быстрые коммуникации)");
+    if (q.urgency === "Нужно вчера") roles.push("AI-рекрутер (быстрые коммуникации)");
     if (q.metric_priority === "Снижение нагрузки HR") roles.push("HR-Helpdesk");
 
     roles = [...new Set(roles)].slice(0,3);
@@ -270,76 +255,6 @@
 
     if (!roles.length) roles = ["AI-рекрутинг под ключ", "Сорсинг + скрининг"];
     state.resultText = `Рекомендуем: ${roles.join(", ")}. Формат: ${format}. Следующий шаг — заявка/консультация.`;
-  }
-
-  function render() {
-    const root = qs("#screen");
-    if (!root) {
-      console.error("No #screen element. Fix templates/index.html (need <main id='screen'>).");
-      return;
-    }
-
-    const s = state.screen;
-
-    if (s === "home") root.innerHTML = homeScreen();
-    if (s === "quiz") root.innerHTML = quizScreen();
-    if (s === "packages") root.innerHTML = packagesScreen();
-    if (s === "cases") root.innerHTML = casesScreen();
-    if (s === "lead") root.innerHTML = leadScreen();
-    if (s === "thanks") root.innerHTML = thanksScreen();
-
-    bind();
-  }
-
-  function bind() {
-    const goQuiz = qs("#goQuiz"); if (goQuiz) goQuiz.onclick = () => { track("start_quiz"); setScreen("quiz"); };
-    const goPackages = qs("#goPackages"); if (goPackages) goPackages.onclick = () => setScreen("packages");
-    const goLead = qs("#goLead"); if (goLead) goLead.onclick = () => setScreen("lead");
-
-    qsa("select[id^='q_']").forEach(sel => {
-      sel.onchange = () => {
-        const key = sel.id.replace("q_", "");
-        state.quiz[key] = sel.value;
-      };
-    });
-
-    const quizDone = qs("#quizDone");
-    if (quizDone) quizDone.onclick = () => {
-      buildRecommendation();
-      track("quiz_completed", { quiz: state.quiz, result: state.resultText });
-      render();
-    };
-
-    const quizToLead = qs("#quizToLead");
-    if (quizToLead) quizToLead.onclick = () => setScreen("lead");
-
-    qsa(".pickPack").forEach(btn => {
-      btn.onclick = () => {
-        state.packagePicked = btn.dataset.pack || "";
-        track("pick_package", { pack: state.packagePicked });
-        setScreen("lead");
-      };
-    });
-
-    const casesToLead = qs("#casesToLead"); if (casesToLead) casesToLead.onclick = () => setScreen("lead");
-    const casesToQuiz = qs("#casesToQuiz"); if (casesToQuiz) casesToQuiz.onclick = () => setScreen("quiz");
-
-    const fillFromQuiz = qs("#fillFromQuiz");
-    if (fillFromQuiz) fillFromQuiz.onclick = () => {
-      const v = qs("#vacancy_types");
-      if (state.quiz.roles && v) v.value = state.quiz.roles;
-    };
-
-    const sendLead = qs("#sendLead");
-    if (sendLead) sendLead.onclick = submitLead;
-
-    const toHome = qs("#toHome"); if (toHome) toHome.onclick = () => setScreen("home");
-    const writeManager = qs("#writeManager");
-    if (writeManager) writeManager.onclick = () => {
-      const manager = "komexspo"; // поменяй на реальный @username
-      if (tg) tg.openTelegramLink(`https://t.me/${manager}`);
-      else window.open(`https://t.me/${manager}`, "_blank");
-    };
   }
 
   async function submitLead() {
@@ -380,33 +295,95 @@
       if (!res.ok) throw new Error(await res.text());
 
       track("lead_success");
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+      tg?.HapticFeedback?.notificationOccurred("success");
       setScreen("thanks");
     } catch (e) {
       track("lead_error", { error: String(e) });
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("error");
+      tg?.HapticFeedback?.notificationOccurred("error");
       toast("Ошибка отправки. Попробуй ещё раз.");
     }
   }
 
   function toast(text) {
-    if (tg?.showPopup) {
-      tg.showPopup({ title: "КОМЭКСПО", message: text, buttons: [{type:"ok"}] });
-    } else {
-      alert(text);
-    }
+    if (tg?.showPopup) tg.showPopup({ title: "КОМЭКСПО", message: text, buttons: [{type:"ok"}] });
+    else alert(text);
   }
 
-  function escapeHtml(s){ return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-  function escapeAttr(s){ return escapeHtml(s).replaceAll('"',"&quot;"); }
+  function render() {
+    const root = qs("#screen");
+    if (!root) {
+      console.error("No #screen element. Нужно <main id='screen'> в index.html");
+      return;
+    }
+
+    // подсветка табов
+    qsa(".tab").forEach(b => b.classList.toggle("active", b.dataset.go === state.screen));
+
+    switch (state.screen) {
+      case "home": root.innerHTML = homeScreen(); break;
+      case "quiz": root.innerHTML = quizScreen(); break;
+      case "packages": root.innerHTML = packagesScreen(); break;
+      case "cases": root.innerHTML = casesScreen(); break;
+      case "lead": root.innerHTML = leadScreen(); break;
+      case "thanks": root.innerHTML = thanksScreen(); break;
+      default: state.screen = "home"; root.innerHTML = homeScreen();
+    }
+
+    bind();
+  }
+
+  function bind() {
+    // HOME
+    qs("#goQuiz") && (qs("#goQuiz").onclick = () => { track("start_quiz"); setScreen("quiz"); });
+    qs("#goPackages") && (qs("#goPackages").onclick = () => setScreen("packages"));
+    qs("#goLead") && (qs("#goLead").onclick = () => setScreen("lead"));
+
+    // QUIZ
+    qsa("select[id^='q_']").forEach(sel => {
+      sel.onchange = () => {
+        const key = sel.id.replace("q_", "");
+        state.quiz[key] = sel.value;
+      };
+    });
+    qs("#quizDone") && (qs("#quizDone").onclick = () => { buildRecommendation(); track("quiz_completed", { quiz: state.quiz, result: state.resultText }); render(); });
+    qs("#quizToLead") && (qs("#quizToLead").onclick = () => setScreen("lead"));
+
+    // PACKAGES
+    qsa(".pickPack").forEach(btn => {
+      btn.onclick = () => {
+        state.packagePicked = btn.dataset.pack || "";
+        track("pick_package", { pack: state.packagePicked });
+        setScreen("lead");
+      };
+    });
+
+    // CASES
+    qs("#casesToLead") && (qs("#casesToLead").onclick = () => setScreen("lead"));
+    qs("#casesToQuiz") && (qs("#casesToQuiz").onclick = () => setScreen("quiz"));
+
+    // LEAD
+    qs("#fillFromQuiz") && (qs("#fillFromQuiz").onclick = () => {
+      const v = qs("#vacancy_types");
+      if (v && state.quiz.roles) v.value = state.quiz.roles;
+    });
+    qs("#sendLead") && (qs("#sendLead").onclick = submitLead);
+
+    // THANKS
+    qs("#toHome") && (qs("#toHome").onclick = () => setScreen("home"));
+    qs("#writeManager") && (qs("#writeManager").onclick = () => {
+      const manager = "komexspo"; // поменяй на реальный @username
+      tg?.openTelegramLink?.(`https://t.me/${manager}`);
+    });
+  }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const btnBack = qs("#btnBack");
-    if (btnBack) btnBack.addEventListener("click", back);
+    // deep link ?screen=quiz
+    const p = new URLSearchParams(location.search);
+    const s = p.get("screen");
+    if (s) state.screen = s;
 
-    qsa(".tab").forEach(btn => {
-      btn.addEventListener("click", () => setScreen(btn.dataset.go));
-    });
+    qs("#btnBack")?.addEventListener("click", back);
+    qsa(".tab").forEach(btn => btn.addEventListener("click", () => setScreen(btn.dataset.go)));
 
     render();
   });
