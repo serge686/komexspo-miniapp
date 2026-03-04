@@ -30,65 +30,6 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
   overflow: auto;
 }
 
-/* ===== Shimmer / Shine for buttons (SLOW x3 + ALL buttons) ===== */
-
-/* чтобы блик не вылезал за края */
-.btn{
-  position: relative;
-  overflow: hidden;
-}
-
-/* сам блик */
-.btn::after{
-  content:"";
-  position:absolute;
-  top:-30%;
-  left:-70%;
-  width:45%;
-  height:160%;
-  transform: skewX(-20deg);
-  pointer-events:none;
-
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,.18) 40%,
-    rgba(255,255,255,.55) 50%,
-    rgba(255,255,255,.18) 60%,
-    rgba(255,255,255,0) 100%
-  );
-
-  opacity: 0;
-
-  /* ✅ Анимация на ВСЕХ кнопках, медленнее в 3 раза (2.8s -> 8.4s) */
-  animation: btnShine 8.4s ease-in-out infinite;
-}
-
-/* primary — ярче */
-.btn.primary::after{ opacity: .9; }
-/* остальные — спокойнее */
-.btn:not(.primary)::after{ opacity: .55; }
-
-/* на hover (на ПК) чуть быстрее, но всё равно медленно */
-@media (hover: hover){
-  .btn:hover::after{
-    animation-duration: 5.9s;
-  }
-}
-
-@keyframes btnShine{
-  0%   { left:-70%; opacity:0; }
-  10%  { opacity:1; }
-  45%  { left:130%; opacity:1; }
-  46%  { opacity:0; }
-  100% { left:130%; opacity:0; }
-}
-
-/* уважение к настройке "без анимаций" */
-@media (prefers-reduced-motion: reduce){
-  .btn::after{ animation:none !important; display:none; }
-}
-
 .tabs{
   position: fixed;
   left: 50%;
@@ -135,17 +76,81 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
 }
 
 .actions{ display:flex; gap:10px; flex-wrap:wrap; margin: 14px 0; }
+
+/* ===== BUTTONS: one blue color + left-to-right slightly lighter ===== */
 .btn{
-  border:0; cursor:pointer;
+  border:0;
+  cursor:pointer;
   padding: 12px 14px;
   border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(0,0,0,.08);
-  font-weight: 700;
-}
-.btn.primary{ background:#4460ff; color:#fff; box-shadow: 0 12px 34px rgba(68,96,255,.30); }
-.btn.ghost{ background: rgba(68,96,255,.10); color:#2c3cff; box-shadow:none; }
 
+  background:#4460ff;
+  color:#fff;
+  font-weight: 700;
+
+  box-shadow: 0 12px 34px rgba(68,96,255,.30);
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* оставляем классы, но по цвету они одинаковые */
+.btn.primary,
+.btn.ghost{
+  background:#4460ff;
+  color:#fff;
+  box-shadow: 0 12px 34px rgba(68,96,255,.30);
+}
+
+/* слева направо делаем чуть светлее (только верхние кнопки в .actions) */
+.actions .btn:nth-child(1){ filter: brightness(0.96); }
+.actions .btn:nth-child(2){ filter: brightness(1.02); }
+.actions .btn:nth-child(3){ filter: brightness(1.08); }
+.actions .btn:nth-child(4){ filter: brightness(1.14); }
+.actions .btn:nth-child(5){ filter: brightness(1.20); }
+
+/* ===== Shimmer / Shine for buttons (SLOW x3 + ALL buttons) ===== */
+.btn::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  pointer-events:none;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.18) 40%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 60%,
+    rgba(255,255,255,0) 100%
+  );
+
+  opacity: .85;
+  animation: btnShine 8.4s ease-in-out infinite; /* медленнее в 3 раза */
+}
+
+/* hover — чуть быстрее, но всё равно медленно */
+@media (hover: hover){
+  .btn:hover::after{ animation-duration: 5.9s; }
+}
+
+@keyframes btnShine{
+  0%   { left:-70%; opacity:0; }
+  10%  { opacity:1; }
+  45%  { left:130%; opacity:1; }
+  46%  { opacity:0; }
+  100% { left:130%; opacity:0; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .btn::after{ animation:none !important; display:none; }
+}
+
+/* ===== Cards / Layout ===== */
 .cards{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top: 14px; }
 .cards.two{ grid-template-columns: repeat(2, minmax(0,1fr)); }
 .card{
