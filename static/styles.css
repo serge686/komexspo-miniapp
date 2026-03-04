@@ -271,3 +271,42 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
 .tabs .tab.active{
   box-shadow: 0 14px 34px rgba(68,96,255,.35);
 }
+
+/* ===== Center layout for Mini App ===== */
+
+.screen{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+}
+
+.lead{
+  text-align:center;
+}
+
+.h1{
+  text-align:center;
+}
+
+.hero-pill{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.actions{
+  justify-content:center;
+}
+
+.cards{
+  width:100%;
+  max-width:720px;
+}
+
+.card{
+  text-align:left;
+}
+
+.section-title{
+  text-align:center;
+}
