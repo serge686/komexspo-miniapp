@@ -26,58 +26,117 @@
     state.events.push({ name, data, ts: Date.now() });
   }
 
-  // ✅ NEW: sync back button visibility (HTML + Telegram native)
-  function syncBackUI() {
-    const canGoBack = state.history.length > 0 || state.screen !== "home";
+  function escapeHtml(s){ return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+  function escapeAttr(s){ return escapeHtml(s).replaceAll('"',"&quot;"); }
 
-    // твоя HTML-кнопка ←
+  function getTgUser() {
+    try { return tg?.initDataUnsafe?.user || null; } catch { return null; }
+  }
+
+  /* =========================
+     URL / History helpers
+  ========================== */
+
+  function currentUrlScreen() {
+    try {
+      const p = new URLSearchParams(location.search);
+      return p.get("screen") || "home";
+    } catch {
+      return "home";
+    }
+  }
+
+  function buildUrlForScreen(screen) {
+    const url = new URL(location.href);
+    url.searchParams.set("screen", screen);
+    return url.toString();
+  }
+
+  // создаём/обновляем запись истории браузера
+  function pushBrowserState(screen) {
+    try {
+      history.pushState({ screen }, "", buildUrlForScreen(screen));
+    } catch {}
+  }
+  function replaceBrowserState(screen) {
+    try {
+      history.replaceState({ screen }, "", buildUrlForScreen(screen));
+    } catch {}
+  }
+
+  /* =========================
+     Back UI sync
+  ========================== */
+
+  function syncBackUI() {
+    const canGoBack = (state.history.length > 0) || (state.screen !== "home");
+
+    // HTML back button
     const btn = qs("#btnBack");
     if (btn) btn.style.visibility = canGoBack ? "visible" : "hidden";
 
-    // нативная Telegram BackButton (если доступна)
+    // Telegram native back button
     if (tg?.BackButton) {
       if (canGoBack) tg.BackButton.show();
       else tg.BackButton.hide();
     }
   }
 
-  // ✅ UPDATED: setScreen now keeps history clean + updates back UI always
+  /* =========================
+     Navigation
+  ========================== */
+
   function setScreen(next, pushHistory = true) {
-    if (pushHistory && state.screen !== next) state.history.push(state.screen);
+    if (!next) next = "home";
+    if (state.screen === next) {
+      syncBackUI();
+      render();
+      return;
+    }
+
+    // внутренняя история (для Telegram/HTML back)
+    if (pushHistory) state.history.push(state.screen);
+
     state.screen = next;
+
+    // ✅ сохраняем экран в URL и history, чтобы после перезагрузки всё работало
+    if (pushHistory) pushBrowserState(next);
+    else replaceBrowserState(next);
+
     syncBackUI();
     render();
   }
 
-  // ✅ UPDATED: back works ALWAYS
-  // 1) if history exists -> go back
-  // 2) if no history and not home -> go home
-  // 3) if already home -> close mini app
-  function back() {
+  // ✅ единый "назад" — и для HTML, и для Telegram, и для Android/back browser
+  function goBack() {
+    // если есть внутренняя история — возвращаемся по ней
     const prev = state.history.pop();
     if (prev) {
       state.screen = prev;
+      // тут НЕ пушим новый browser state — кнопку "назад" должен обрабатывать сам браузер.
+      // Но если back вызвали НЕ браузером (tg/html), то нам нужно "шагнуть" назад в browser history:
+      try { history.back(); } catch {}
       syncBackUI();
       render();
       return;
     }
 
+    // если истории нет, но мы не дома — домой
     if (state.screen !== "home") {
       state.screen = "home";
+      try { history.back(); } catch {}
       syncBackUI();
       render();
       return;
     }
 
+    // если уже home — закрываем mini app
     tg?.close?.();
   }
 
-  function getTgUser() {
-    try { return tg?.initDataUnsafe?.user || null; } catch { return null; }
-  }
-
-  function escapeHtml(s){ return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-  function escapeAttr(s){ return escapeHtml(s).replaceAll('"',"&quot;"); }
+  /* =========================
+     UI builders
+  ========================== */
 
   function inputField(label, id, value="") {
     return `
@@ -220,7 +279,7 @@
       <div class="lead">Оставьте контакт и вводные. Telegram-данные подставим автоматически.</div>
 
       <div class="form">
-        ${inputField("Имя", "name", nameFromTg)}
+        ${inputField("Ф.И.О.", "name", nameFromTg)}
         ${inputField("Телефон", "phone", "")}
         ${inputField("Компания", "company", "")}
         ${inputField("Объём найма (в месяц)", "hiring_volume", "")}
@@ -234,7 +293,7 @@
 
         <div class="field full">
           <label>Комментарий</label>
-          <textarea class="input" id="comment" placeholder="Например: срочно закрыть 5 sales, нужна автоматизация скрининга..."></textarea>
+          <textarea class="input" id="comment" placeholder="Например: срочно закрыть 5 продаж, нужна автоматизация скрининга..."></textarea>
         </div>
       </div>
 
@@ -350,7 +409,7 @@
       return;
     }
 
-    // ✅ keep back UI always in sync (even after render changes DOM)
+    // синхронизируем back UI
     syncBackUI();
 
     // подсветка табов
@@ -413,24 +472,41 @@
     });
   }
 
+  /* =========================
+     Boot
+  ========================== */
+
   document.addEventListener("DOMContentLoaded", () => {
-    // deep link ?screen=quiz
-    const p = new URLSearchParams(location.search);
-    const s = p.get("screen");
-    if (s) state.screen = s;
+    // ✅ восстановление экрана из URL (работает после refresh)
+    const s = currentUrlScreen();
+    state.screen = s;
+
+    // ✅ подменяем текущий state, чтобы "назад" работал корректно
+    replaceBrowserState(state.screen);
 
     // ✅ HTML back button
-    qs("#btnBack")?.addEventListener("click", back);
+    qs("#btnBack")?.addEventListener("click", goBack);
 
     // ✅ tabs
     qsa(".tab").forEach(btn => btn.addEventListener("click", () => setScreen(btn.dataset.go)));
 
-    // ✅ Telegram native back button (works everywhere where Telegram shows it)
-    tg?.BackButton?.onClick(back);
+    // ✅ Telegram native back button
+    tg?.BackButton?.onClick(goBack);
+
+    // ✅ Android / Browser back (popstate)
+    window.addEventListener("popstate", (e) => {
+      const screen = e?.state?.screen || currentUrlScreen() || "home";
+      state.screen = screen;
+
+      // чистим internal history если пользователь "улетел" назад до home
+      if (state.screen === "home") state.history = [];
+
+      syncBackUI();
+      render();
+    });
 
     // ✅ initial sync
     syncBackUI();
-
     render();
   });
 })();
