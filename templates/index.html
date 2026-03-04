@@ -5,39 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>КОМЭКСПО — AI HR-агентство</title>
 
+  <!-- Telegram Mini Apps API (должен быть ДО app.js) -->
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 
 <body>
+  <!-- фон -->
   <div class="bg"></div>
 
+  <!-- контейнер приложения -->
   <div class="app">
+
+    <!-- верхняя панель -->
     <header class="topbar">
       <div class="brand">
         <div class="logo">КОМЭКСПО</div>
         <div class="sub">AI HR-агентство • найм и HR-автоматизация</div>
       </div>
-      <button class="iconbtn" id="btnBack" aria-label="Назад">←</button>
+      <button class="iconbtn" id="btnBack" type="button" aria-label="Назад">←</button>
     </header>
 
     <!-- ВАЖНО: сюда рисует app.js -->
-    <main id="screen" class="screen"></main>
+    <main id="screen" class="screen" role="main"></main>
 
-    <nav class="tabs">
-      <button class="tab" data-go="home">Главная</button>
-      <button class="tab" data-go="quiz">Квиз</button>
-      <button class="tab" data-go="packages">Пакеты</button>
-      <button class="tab" data-go="cases">Кейсы</button>
-      <button class="tab primary" data-go="lead">Заявка</button>
+    <!-- нижние табы -->
+    <nav class="tabs" aria-label="Навигация">
+      <button class="tab" type="button" data-go="home">Главная</button>
+      <button class="tab" type="button" data-go="quiz">Квиз</button>
+      <button class="tab" type="button" data-go="packages">Пакеты</button>
+      <button class="tab" type="button" data-go="cases">Кейсы</button>
+      <button class="tab primary" type="button" data-go="lead">Заявка</button>
     </nav>
 
+    <!-- подвал -->
     <footer class="footer">
       <div class="hint">© KomExpo • Mini App</div>
     </footer>
+
   </div>
 
+  <!-- основной скрипт приложения -->
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
