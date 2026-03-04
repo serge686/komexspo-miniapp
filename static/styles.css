@@ -30,7 +30,7 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
   overflow: auto;
 }
 
-/* ===== Shimmer / Shine for buttons (add at END of file) ===== */
+/* ===== Shimmer / Shine for buttons (SLOW x3 + ALL buttons) ===== */
 
 /* чтобы блик не вылезал за края */
 .btn{
@@ -59,18 +59,20 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
   );
 
   opacity: 0;
+
+  /* ✅ Анимация на ВСЕХ кнопках, медленнее в 3 раза (2.8s -> 8.4s) */
+  animation: btnShine 8.4s ease-in-out infinite;
 }
 
-/* по умолчанию — переливается только primary */
-.btn.primary::after{
-  animation: btnShine 2.8s ease-in-out infinite;
-  opacity: .9;
-}
+/* primary — ярче */
+.btn.primary::after{ opacity: .9; }
+/* остальные — спокойнее */
+.btn:not(.primary)::after{ opacity: .55; }
 
-/* на hover (на ПК) ускоряем */
+/* на hover (на ПК) чуть быстрее, но всё равно медленно */
 @media (hover: hover){
   .btn:hover::after{
-    animation-duration: 1.6s;
+    animation-duration: 5.9s;
   }
 }
 
@@ -86,6 +88,7 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
 @media (prefers-reduced-motion: reduce){
   .btn::after{ animation:none !important; display:none; }
 }
+
 .tabs{
   position: fixed;
   left: 50%;
