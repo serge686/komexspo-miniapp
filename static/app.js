@@ -52,7 +52,6 @@
     return url.toString();
   }
 
-  // создаём/обновляем запись истории браузера
   function pushBrowserState(screen) {
     try {
       history.pushState({ screen }, "", buildUrlForScreen(screen));
@@ -71,11 +70,9 @@
   function syncBackUI() {
     const canGoBack = (state.history.length > 0) || (state.screen !== "home");
 
-    // HTML back button
     const btn = qs("#btnBack");
     if (btn) btn.style.visibility = canGoBack ? "visible" : "hidden";
 
-    // Telegram native back button
     if (tg?.BackButton) {
       if (canGoBack) tg.BackButton.show();
       else tg.BackButton.hide();
@@ -94,12 +91,10 @@
       return;
     }
 
-    // внутренняя история (для Telegram/HTML back)
     if (pushHistory) state.history.push(state.screen);
 
     state.screen = next;
 
-    // ✅ сохраняем экран в URL и history, чтобы после перезагрузки всё работало
     if (pushHistory) pushBrowserState(next);
     else replaceBrowserState(next);
 
@@ -107,21 +102,16 @@
     render();
   }
 
-  // ✅ единый "назад" — и для HTML, и для Telegram, и для Android/back browser
   function goBack() {
-    // если есть внутренняя история — возвращаемся по ней
     const prev = state.history.pop();
     if (prev) {
       state.screen = prev;
-      // тут НЕ пушим новый browser state — кнопку "назад" должен обрабатывать сам браузер.
-      // Но если back вызвали НЕ браузером (tg/html), то нам нужно "шагнуть" назад в browser history:
       try { history.back(); } catch {}
       syncBackUI();
       render();
       return;
     }
 
-    // если истории нет, но мы не дома — домой
     if (state.screen !== "home") {
       state.screen = "home";
       try { history.back(); } catch {}
@@ -130,7 +120,6 @@
       return;
     }
 
-    // если уже home — закрываем mini app
     tg?.close?.();
   }
 
@@ -181,9 +170,116 @@
       </div>
 
       <div class="cards">
-        <div class="card"><b>AI-рекрутер</b><small>Отклики, ответы, назначение интервью</small></div>
-        <div class="card"><b>Сорсинг + скрининг</b><small>Подбор, фильтрация, shortlist</small></div>
-        <div class="card"><b>HR-автоматизация</b><small>Онбординг, база знаний, helpdesk</small></div>
+        <!-- ✅ AI-рекрутер теперь активный -->
+        <button class="card cardbtn" id="openAiRecruiter" type="button">
+          <b>AI-рекрутер</b><small>Отклики, ответы, назначение интервью</small>
+        </button>
+
+        <!-- оставляем как было (не меняем логику), но делаем кликабельными -->
+        <button class="card cardbtn" id="openSourcing" type="button">
+          <b>Сорсинг + скрининг</b><small>Подбор, фильтрация, shortlist</small>
+        </button>
+
+        <button class="card cardbtn" id="openHrAuto" type="button">
+          <b>HR-автоматизация</b><small>Онбординг, база знаний, helpdesk</small>
+        </button>
+      </div>
+    `;
+  }
+
+  function aiRecruiterScreen() {
+    return `
+      <div class="section-title">AI-рекрутер (ТЗ / MVP)</div>
+      <div class="lead">
+        В этом разделе — требования из ТЗ: цель, KPI, сценарии, MVP, интеграции и приёмка.
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <b>1. Общие сведения</b>
+        <small>
+          <b>Название проекта:</b> Telegram Mini App «AI HR-агентство — найм и HR-автоматизация под ключ».<br/>
+          <b>Заказчик:</b> AI-агентство «КОМЭКСПО».<br/><br/>
+          <b>Цель проекта:</b><br/>
+          • Показать ценность услуги «AI HR-агентство» и решения (AI-рекрутер, сорсинг, скрининг, онбординг, HR-helpdesk).<br/>
+          • Собрать и квалифицировать заявку (вакансии/объём найма, срочность, бюджет, процессы).<br/>
+          • Дать быстрый путь: консультация / аудит / подбор пакета / запись на встречу.<br/>
+          • Передать лид в CRM/таблицу и уведомить менеджера.
+        </small>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <b>1.4. KPI</b>
+        <small>
+          • Конверсия в заявку: задаёт заказчик.<br/>
+          • Доля квалифицированных заявок: ≥ 60%.<br/>
+          • Время до заявки: ≤ 2 минуты.<br/>
+          • Доля записей на встречу: задаёт заказчик.
+        </small>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <b>2. ЦА и сценарии</b>
+        <small>
+          <b>Пользователи:</b> собственник/CEO, HRD/HR-менеджер, руководитель продаж/поддержки, операционный директор.<br/><br/>
+          <b>User Stories:</b><br/>
+          1) Быстро понять, что входит в услугу и какие задачи закрывает.<br/>
+          2) Выбрать задачу и получить рекомендацию ролей/пакета.<br/>
+          3) Оставить заявку с вводными по вакансиям и срокам.<br/>
+          4) Записаться на консультацию/аудит.<br/>
+          5) Менеджеру получить лид с контекстом и быстро взять в работу.
+        </small>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <b>3. Функциональные требования (MVP)</b>
+        <small>
+          <b>Навигация:</b> запуск из бота. Разделы: Главная, Подбор решения (Квиз), Услуги/Пакеты, Кейсы, Заявка.<br/><br/>
+          <b>Главная:</b> оффер + список автоматизаций: отклики/ответы, скрининг, назначение интервью, онбординг, отчёты и контроль.
+          CTA: Подобрать решение / Пакеты / Консультация / Заявка.<br/><br/>
+          <b>Квиз (2–3 минуты):</b> 6–10 вопросов: отрасль, размер команды, вакансии/мес, роли, срочность, каналы, приоритет метрик.
+          Результат: 1–3 роли + формат (под ключ / обучение / оператор в штат) + кнопка к заявке.<br/><br/>
+          <b>Услуги/Пакеты:</b> AI-рекрутинг под ключ, сорсинг+скрининг, онбординг+база знаний, HR-helpdesk, аудит HR (опц.).
+          Описание 2–4 строки, «что входит» 3–6 пунктов, CTA «Оставить заявку».<br/><br/>
+          <b>Форма заявки:</b> Ф.И.О., телефон, компания, объём найма, тип вакансий, способ связи; автоподстановка Telegram-данных; передача квиза/пакета; согласие на ПДн.
+          Экран «Спасибо» + «Написать менеджеру».
+        </small>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <b>4. Интеграции, безопасность, аналитика</b>
+        <small>
+          • CRM (Bitrix24) + резерв в таблицу/webhook; уведомления менеджеру в Telegram.<br/>
+          • События аналитики: open_app, start_quiz, quiz_completed, lead_submit, lead_success/lead_error.<br/>
+          • Валидация initData, антиспам, логирование ошибок.
+        </small>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <b>5. Приёмка</b>
+        <small>
+          MVP выполнен, если:<br/>
+          1) Мини-ап работает на iOS/Android.<br/>
+          2) Квиз и заявка отрабатывают, данные уходят в CRM/таблицу, есть уведомление менеджеру.<br/>
+          3) Нет критических ошибок Telegram WebApp.
+        </small>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <b>6. Данные для согласования</b>
+        <small>
+          • Ответственный со стороны заказчика: [ФИО] / [должность]<br/>
+          • Контакт в Telegram: [@username]<br/>
+          • Телефон: [+7 …]<br/>
+          • Куда отправлять заявки: [CRM / таблица / чат]<br/>
+          • Чат для уведомлений менеджерам: [ссылка/ID чата]<br/>
+          • Ссылка на политику/согласие: [URL]<br/>
+          • Согласование дизайна/контента: [кто утверждает и срок]
+        </small>
+      </div>
+
+      <div class="row" style="margin-top:14px;">
+        <button class="btn primary" id="aiToQuiz">Подобрать решение</button>
+        <button class="btn" id="aiToLead">Оставить заявку</button>
       </div>
     `;
   }
@@ -409,14 +505,13 @@
       return;
     }
 
-    // синхронизируем back UI
     syncBackUI();
 
-    // подсветка табов
     qsa(".tab").forEach(b => b.classList.toggle("active", b.dataset.go === state.screen));
 
     switch (state.screen) {
       case "home": root.innerHTML = homeScreen(); break;
+      case "ai_recruiter": root.innerHTML = aiRecruiterScreen(); break;
       case "quiz": root.innerHTML = quizScreen(); break;
       case "packages": root.innerHTML = packagesScreen(); break;
       case "cases": root.innerHTML = casesScreen(); break;
@@ -433,6 +528,15 @@
     qs("#goQuiz") && (qs("#goQuiz").onclick = () => { track("start_quiz"); setScreen("quiz"); });
     qs("#goPackages") && (qs("#goPackages").onclick = () => setScreen("packages"));
     qs("#goLead") && (qs("#goLead").onclick = () => setScreen("lead"));
+
+    // ✅ cards on home
+    qs("#openAiRecruiter") && (qs("#openAiRecruiter").onclick = () => setScreen("ai_recruiter"));
+    qs("#openSourcing") && (qs("#openSourcing").onclick = () => setScreen("packages"));
+    qs("#openHrAuto") && (qs("#openHrAuto").onclick = () => setScreen("packages"));
+
+    // ✅ ai recruiter screen
+    qs("#aiToQuiz") && (qs("#aiToQuiz").onclick = () => setScreen("quiz"));
+    qs("#aiToLead") && (qs("#aiToLead").onclick = () => setScreen("lead"));
 
     // QUIZ
     qsa("select[id^='q_']").forEach(sel => {
@@ -477,36 +581,36 @@
   ========================== */
 
   document.addEventListener("DOMContentLoaded", () => {
-    // ✅ восстановление экрана из URL (работает после refresh)
     const s = currentUrlScreen();
     state.screen = s;
 
-    // ✅ подменяем текущий state, чтобы "назад" работал корректно
     replaceBrowserState(state.screen);
 
-    // ✅ HTML back button
     qs("#btnBack")?.addEventListener("click", goBack);
 
-    // ✅ tabs
     qsa(".tab").forEach(btn => btn.addEventListener("click", () => setScreen(btn.dataset.go)));
 
-    // ✅ Telegram native back button
     tg?.BackButton?.onClick(goBack);
 
-    // ✅ Android / Browser back (popstate)
     window.addEventListener("popstate", (e) => {
       const screen = e?.state?.screen || currentUrlScreen() || "home";
       state.screen = screen;
 
-      // чистим internal history если пользователь "улетел" назад до home
       if (state.screen === "home") state.history = [];
 
       syncBackUI();
       render();
     });
 
-    // ✅ initial sync
     syncBackUI();
     render();
   });
 })();
+
+.cardbtn{
+  width:100%;
+  text-align:left;
+  border:0;
+  cursor:pointer;
+}
+.cardbtn:active{ transform: translateY(1px); }
