@@ -26,16 +26,50 @@
     state.events.push({ name, data, ts: Date.now() });
   }
 
+  // ✅ NEW: sync back button visibility (HTML + Telegram native)
+  function syncBackUI() {
+    const canGoBack = state.history.length > 0 || state.screen !== "home";
+
+    // твоя HTML-кнопка ←
+    const btn = qs("#btnBack");
+    if (btn) btn.style.visibility = canGoBack ? "visible" : "hidden";
+
+    // нативная Telegram BackButton (если доступна)
+    if (tg?.BackButton) {
+      if (canGoBack) tg.BackButton.show();
+      else tg.BackButton.hide();
+    }
+  }
+
+  // ✅ UPDATED: setScreen now keeps history clean + updates back UI always
   function setScreen(next, pushHistory = true) {
-    if (pushHistory) state.history.push(state.screen);
+    if (pushHistory && state.screen !== next) state.history.push(state.screen);
     state.screen = next;
+    syncBackUI();
     render();
   }
 
+  // ✅ UPDATED: back works ALWAYS
+  // 1) if history exists -> go back
+  // 2) if no history and not home -> go home
+  // 3) if already home -> close mini app
   function back() {
     const prev = state.history.pop();
-    state.screen = prev || "home";
-    render();
+    if (prev) {
+      state.screen = prev;
+      syncBackUI();
+      render();
+      return;
+    }
+
+    if (state.screen !== "home") {
+      state.screen = "home";
+      syncBackUI();
+      render();
+      return;
+    }
+
+    tg?.close?.();
   }
 
   function getTgUser() {
@@ -316,6 +350,9 @@
       return;
     }
 
+    // ✅ keep back UI always in sync (even after render changes DOM)
+    syncBackUI();
+
     // подсветка табов
     qsa(".tab").forEach(b => b.classList.toggle("active", b.dataset.go === state.screen));
 
@@ -382,8 +419,17 @@
     const s = p.get("screen");
     if (s) state.screen = s;
 
+    // ✅ HTML back button
     qs("#btnBack")?.addEventListener("click", back);
+
+    // ✅ tabs
     qsa(".tab").forEach(btn => btn.addEventListener("click", () => setScreen(btn.dataset.go)));
+
+    // ✅ Telegram native back button (works everywhere where Telegram shows it)
+    tg?.BackButton?.onClick(back);
+
+    // ✅ initial sync
+    syncBackUI();
 
     render();
   });
