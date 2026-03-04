@@ -170,12 +170,10 @@
       </div>
 
       <div class="cards">
-        <!-- ✅ AI-рекрутер теперь активный -->
         <button class="card cardbtn" id="openAiRecruiter" type="button">
           <b>AI-рекрутер</b><small>Отклики, ответы, назначение интервью</small>
         </button>
 
-        <!-- оставляем как было (не меняем логику), но делаем кликабельными -->
         <button class="card cardbtn" id="openSourcing" type="button">
           <b>Сорсинг + скрининг</b><small>Подбор, фильтрация, shortlist</small>
         </button>
@@ -506,7 +504,6 @@
     }
 
     syncBackUI();
-
     qsa(".tab").forEach(b => b.classList.toggle("active", b.dataset.go === state.screen));
 
     switch (state.screen) {
@@ -529,12 +526,12 @@
     qs("#goPackages") && (qs("#goPackages").onclick = () => setScreen("packages"));
     qs("#goLead") && (qs("#goLead").onclick = () => setScreen("lead"));
 
-    // ✅ cards on home
+    // cards on home
     qs("#openAiRecruiter") && (qs("#openAiRecruiter").onclick = () => setScreen("ai_recruiter"));
     qs("#openSourcing") && (qs("#openSourcing").onclick = () => setScreen("packages"));
     qs("#openHrAuto") && (qs("#openHrAuto").onclick = () => setScreen("packages"));
 
-    // ✅ ai recruiter screen
+    // ai recruiter screen
     qs("#aiToQuiz") && (qs("#aiToQuiz").onclick = () => setScreen("quiz"));
     qs("#aiToLead") && (qs("#aiToLead").onclick = () => setScreen("lead"));
 
@@ -587,7 +584,6 @@
     replaceBrowserState(state.screen);
 
     qs("#btnBack")?.addEventListener("click", goBack);
-
     qsa(".tab").forEach(btn => btn.addEventListener("click", () => setScreen(btn.dataset.go)));
 
     tg?.BackButton?.onClick(goBack);
@@ -606,11 +602,3 @@
     render();
   });
 })();
-
-.cardbtn{
-  width:100%;
-  text-align:left;
-  border:0;
-  cursor:pointer;
-}
-.cardbtn:active{ transform: translateY(1px); }

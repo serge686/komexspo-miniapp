@@ -392,3 +392,11 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
   justify-content:center;
   text-align:center;
 }
+
+.cardbtn{
+  width:100%;
+  text-align:left;
+  border:0;
+  cursor:pointer;
+}
+.cardbtn:active{ transform: translateY(1px); }
