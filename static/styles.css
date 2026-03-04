@@ -102,7 +102,7 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
   box-shadow: 0 12px 34px rgba(68,96,255,.30);
 }
 
-/* слева направо делаем чуть светлее (только верхние кнопки в .actions) */
+/* слева направо делаем чуть светлее (верхние кнопки в .actions) */
 .actions .btn:nth-child(1){ filter: brightness(0.96); }
 .actions .btn:nth-child(2){ filter: brightness(1.02); }
 .actions .btn:nth-child(3){ filter: brightness(1.08); }
@@ -153,12 +153,47 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
 /* ===== Cards / Layout ===== */
 .cards{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top: 14px; }
 .cards.two{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+/* ✅ Карточки: светло-голубые + shimmer */
 .card{
-  background: rgba(255,255,255,.92);
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    #eef5ff 0%,
+    #e4efff 45%,
+    #d9e9ff 100%
+  );
+
   border-radius: 18px;
   padding: 14px;
-  box-shadow: 0 12px 36px rgba(0,0,0,.08);
+  box-shadow: 0 12px 36px rgba(68,96,255,.14);
 }
+
+.card::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  pointer-events:none;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.22) 40%,
+    rgba(255,255,255,.70) 50%,
+    rgba(255,255,255,.22) 60%,
+    rgba(255,255,255,0) 100%
+  );
+
+  opacity:.65;
+  animation: btnShine 9s ease-in-out infinite;
+}
+
 .card small{ display:block; opacity:.75; margin-top:6px; }
 .bullets{ margin-top:10px; opacity:.85; font-size:13px; }
 
@@ -191,13 +226,14 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
 }
 
 /* ===== Bottom tabs style like buttons ===== */
-
 .tabs .tab{
   position: relative;
   overflow: hidden;
+
   background: #4460ff;
   color:#fff;
   box-shadow: 0 10px 26px rgba(68,96,255,.25);
+  opacity: 1;
 }
 
 /* слева направо немного светлее */
@@ -229,4 +265,9 @@ body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sa
   opacity:.7;
   animation: btnShine 8.4s ease-in-out infinite;
   pointer-events:none;
+}
+
+/* active оставляем читабельным */
+.tabs .tab.active{
+  box-shadow: 0 14px 34px rgba(68,96,255,.35);
 }
