@@ -1,13 +1,16 @@
-html, body { height: 100%; margin: 0; }
+/* static/styles.css */
 
-/* ✅ фон чуть темнее + больше синего (под сайт + mini app) */
+/* base */
+html, body { height: 100%; margin: 0; }
+*{ box-sizing: border-box; }
+
 body{
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text, #0b1220);
   background: linear-gradient(180deg, #f2f6ff 0%, #e9f0ff 40%, #e1eaff 100%);
 }
 
-/* фоновые пятна */
+/* background blobs */
 .bg{
   position: fixed;
   inset: 0;
@@ -19,8 +22,7 @@ body{
   z-index: 0;
 }
 
-*{ box-sizing: border-box; }
-
+/* layout */
 .app{
   position: relative;
   z-index: 1;
@@ -47,13 +49,12 @@ body{
   box-shadow: 0 8px 24px rgba(0,0,0,.08);
 }
 
-/* ✅ главный контейнер: всегда 100% ширины, но контент в колонке */
+/* screen: full width container, centered content */
 .screen{
   flex: 1;
   width: 100%;
-
   padding: 18px;
-  padding-bottom: 130px; /* место под табы */
+  padding-bottom: 130px; /* space for tabs */
   overflow: auto;
 
   max-width: 720px;
@@ -61,7 +62,7 @@ body{
 
   display:flex;
   flex-direction:column;
-  align-items:stretch; /* ✅ важно: убирает "узкую колонку" */
+  align-items:stretch; /* IMPORTANT: form fields full width */
   text-align:center;
 }
 
@@ -72,7 +73,7 @@ body{
   font-size:12px;
 }
 
-/* типографика */
+/* typography */
 .h1{
   font-size: 34px;
   line-height: 1.05;
@@ -98,7 +99,7 @@ body{
   margin: 0 auto;
 }
 
-/* actions */
+/* actions row */
 .actions{
   display:flex;
   gap:10px;
@@ -107,19 +108,16 @@ body{
   justify-content:center;
 }
 
-/* ===== BUTTONS ===== */
+/* ===== buttons ===== */
 .btn{
   border:0;
   cursor:pointer;
   padding: 12px 14px;
   border-radius: 14px;
-
   background:#4460ff;
   color:#fff;
   font-weight: 700;
-
   box-shadow: 0 12px 34px rgba(68,96,255,.30);
-
   position: relative;
   overflow: hidden;
 }
@@ -131,7 +129,7 @@ body{
   box-shadow: 0 12px 34px rgba(68,96,255,.30);
 }
 
-/* лёгкая градация яркости в hero-кнопках */
+/* subtle brightness grading in hero buttons */
 .actions .btn:nth-child(1){ filter: brightness(0.98); }
 .actions .btn:nth-child(2){ filter: brightness(1.04); }
 .actions .btn:nth-child(3){ filter: brightness(1.10); }
@@ -173,12 +171,11 @@ body{
   .btn::after{ animation:none !important; display:none; }
 }
 
-/* ===== Cards ===== */
+/* ===== cards ===== */
 .cards{
   width: 100%;
   max-width: 720px;
   margin: 14px auto 0;
-
   display:grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
   gap:12px;
@@ -188,12 +185,10 @@ body{
 .card{
   position: relative;
   overflow: hidden;
-
   background: linear-gradient(135deg, #eef5ff 0%, #e4efff 45%, #d9e9ff 100%);
   border-radius: 18px;
   padding: 14px;
   box-shadow: 0 12px 36px rgba(68,96,255,.14);
-
   text-align:left;
 }
 .card::after{
@@ -231,16 +226,14 @@ body{
 }
 .cardbtn:active{ transform: translateY(1px); }
 
-/* ===== ✅ FORM: одна колонка, все поля одинаковые (как select) ===== */
+/* ===== form: single column, uniform fields ===== */
 .form{
   width: 100%;
   max-width: 720px;
   margin: 12px auto 0;
-
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-
   text-align:left;
 }
 .field{ width: 100%; }
@@ -254,7 +247,6 @@ body{
 
 .input, .select{
   width: 100%;
-  box-sizing: border-box;
   padding: 12px 12px;
   border-radius: 14px;
   border: 1px solid rgba(0,0,0,.08);
@@ -284,7 +276,7 @@ textarea.input{
   align-items:center;
 }
 
-/* ===== ✅ Bottom tabs: ровно 4 симметричные кнопки ===== */
+/* ===== bottom tabs: 4 symmetric buttons ===== */
 .tabs{
   position: fixed;
   left: 12px;
@@ -328,7 +320,7 @@ textarea.input{
   box-shadow: 0 10px 26px rgba(68,96,255,.25);
 }
 
-/* лёгкая яркость слева-направо для 4 кнопок */
+/* brightness gradient for 4 buttons */
 .tabs .tab:nth-child(1){ filter: brightness(.96); }
 .tabs .tab:nth-child(2){ filter: brightness(1.03); }
 .tabs .tab:nth-child(3){ filter: brightness(1.09); }
@@ -359,12 +351,374 @@ textarea.input{
   box-shadow: 0 14px 34px rgba(68,96,255,.35);
 }
 
-/* primary оставляем как стиль (если в html есть class primary) */
-.tab.primary{
-  filter: brightness(1.12);
+/* keep primary slightly brighter (optional) */
+.tab.primary{ filter: brightness(1.12); }
+
+/* safety: if quiz tab exists, hide it */
+.tabs .tab[data-go="quiz"]{ display:none !important; }
+
+/* responsive */
+@media (max-width: 820px){
+  .cards{ grid-template-columns: 1fr; }
+  .cards.two{ grid-template-columns: 1fr; }
+  .h1{ font-size: 28px; }
+}/* static/styles.css */
+
+/* base */
+html, body { height: 100%; margin: 0; }
+*{ box-sizing: border-box; }
+
+body{
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text, #0b1220);
+  background: linear-gradient(180deg, #f2f6ff 0%, #e9f0ff 40%, #e1eaff 100%);
 }
 
-/* ✅ страховка: если где-то осталась кнопка "quiz" — скрыть */
+/* background blobs */
+.bg{
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(900px 700px at 20% 75%, rgba(68,96,255,.28), transparent 65%),
+    radial-gradient(800px 600px at 80% 20%, rgba(70,120,255,.25), transparent 65%),
+    radial-gradient(700px 600px at 50% -10%, rgba(120,150,255,.20), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* layout */
+.app{
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* topbar */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 18px;
+}
+.brand .logo{ font-weight:800; letter-spacing:.5px; }
+.brand .sub{ font-size:12px; opacity:.7; margin-top:2px; }
+.iconbtn{
+  border:0;
+  background:#fff;
+  border-radius:12px;
+  padding:10px 12px;
+  cursor:pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+/* screen: full width container, centered content */
+.screen{
+  flex: 1;
+  width: 100%;
+  padding: 18px;
+  padding-bottom: 130px; /* space for tabs */
+  overflow: auto;
+
+  max-width: 720px;
+  margin: 0 auto;
+
+  display:flex;
+  flex-direction:column;
+  align-items:stretch; /* IMPORTANT: form fields full width */
+  text-align:center;
+}
+
+/* footer */
+.footer{
+  padding: 10px 18px 120px;
+  opacity:.65;
+  font-size:12px;
+}
+
+/* typography */
+.h1{
+  font-size: 34px;
+  line-height: 1.05;
+  font-weight: 900;
+  margin: 14px 0;
+  text-align:center;
+}
+.accent{ color:#4460ff; }
+.lead{
+  opacity:.85;
+  max-width: 880px;
+  margin: 0 auto;
+  text-align:center;
+}
+.hero-pill{
+  display:inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(88,108,255,.10);
+  color:#2c3cff;
+  font-weight: 700;
+  font-size: 12px;
+  margin: 0 auto;
+}
+
+/* actions row */
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin: 14px 0;
+  justify-content:center;
+}
+
+/* ===== buttons ===== */
+.btn{
+  border:0;
+  cursor:pointer;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background:#4460ff;
+  color:#fff;
+  font-weight: 700;
+  box-shadow: 0 12px 34px rgba(68,96,255,.30);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.primary,
+.btn.ghost{
+  background:#4460ff;
+  color:#fff;
+  box-shadow: 0 12px 34px rgba(68,96,255,.30);
+}
+
+/* subtle brightness grading in hero buttons */
+.actions .btn:nth-child(1){ filter: brightness(0.98); }
+.actions .btn:nth-child(2){ filter: brightness(1.04); }
+.actions .btn:nth-child(3){ filter: brightness(1.10); }
+.actions .btn:nth-child(4){ filter: brightness(1.16); }
+.actions .btn:nth-child(5){ filter: brightness(1.22); }
+
+/* shimmer */
+@keyframes btnShine{
+  0%   { left:-70%; opacity:0; }
+  10%  { opacity:1; }
+  45%  { left:130%; opacity:1; }
+  46%  { opacity:0; }
+  100% { left:130%; opacity:0; }
+}
+.btn::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  pointer-events:none;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.18) 40%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity: .85;
+  animation: btnShine 8.4s ease-in-out infinite;
+}
+@media (hover: hover){
+  .btn:hover::after{ animation-duration: 5.9s; }
+}
+@media (prefers-reduced-motion: reduce){
+  .btn::after{ animation:none !important; display:none; }
+}
+
+/* ===== cards ===== */
+.cards{
+  width: 100%;
+  max-width: 720px;
+  margin: 14px auto 0;
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:12px;
+}
+.cards.two{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+.card{
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #eef5ff 0%, #e4efff 45%, #d9e9ff 100%);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 12px 36px rgba(68,96,255,.14);
+  text-align:left;
+}
+.card::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  pointer-events:none;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.22) 40%,
+    rgba(255,255,255,.70) 50%,
+    rgba(255,255,255,.22) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity:.65;
+  animation: btnShine 9s ease-in-out infinite;
+}
+.card small{ display:block; opacity:.75; margin-top:6px; }
+.bullets{ margin-top:10px; opacity:.85; font-size:13px; }
+.section-title{ font-weight: 900; font-size: 18px; margin-bottom: 8px; text-align:center; }
+
+/* cards as buttons */
+.cardbtn{
+  width:100%;
+  text-align:left;
+  border:0;
+  cursor:pointer;
+  background: none;
+  padding: 0;
+}
+.cardbtn:active{ transform: translateY(1px); }
+
+/* ===== form: single column, uniform fields ===== */
+.form{
+  width: 100%;
+  max-width: 720px;
+  margin: 12px auto 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  text-align:left;
+}
+.field{ width: 100%; }
+.field label{
+  display:block;
+  font-size:12px;
+  opacity:.7;
+  margin-bottom:6px;
+}
+.field.full{ grid-column: 1 / -1; }
+
+.input, .select{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: rgba(255,255,255,.95);
+  outline: none;
+}
+
+textarea.input{
+  min-height: 96px;
+  resize: vertical;
+}
+
+.row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  justify-content:center;
+}
+
+.checkbox{
+  font-size: 13px;
+  opacity:.85;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+/* ===== bottom tabs: 4 symmetric buttons ===== */
+.tabs{
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 18px;
+
+  width: auto;
+  max-width: 720px;
+  margin: 0 auto;
+
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 10px;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+
+  box-shadow: 0 12px 40px rgba(0,0,0,.10);
+  z-index: 2;
+}
+
+.tab{
+  border: 0;
+  padding: 12px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  position: relative;
+  overflow: hidden;
+
+  background: #4460ff;
+  color:#fff;
+  box-shadow: 0 10px 26px rgba(68,96,255,.25);
+}
+
+/* brightness gradient for 4 buttons */
+.tabs .tab:nth-child(1){ filter: brightness(.96); }
+.tabs .tab:nth-child(2){ filter: brightness(1.03); }
+.tabs .tab:nth-child(3){ filter: brightness(1.09); }
+.tabs .tab:nth-child(4){ filter: brightness(1.15); }
+
+.tabs .tab::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.18) 40%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity:.7;
+  animation: btnShine 8.4s ease-in-out infinite;
+  pointer-events:none;
+}
+
+.tab.active{
+  box-shadow: 0 14px 34px rgba(68,96,255,.35);
+}
+
+/* keep primary slightly brighter (optional) */
+.tab.primary{ filter: brightness(1.12); }
+
+/* safety: if quiz tab exists, hide it */
 .tabs .tab[data-go="quiz"]{ display:none !important; }
 
 /* responsive */
