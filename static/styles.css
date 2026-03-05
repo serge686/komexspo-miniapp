@@ -748,3 +748,33 @@ textarea.input{
   box-shadow: 0 18px 46px rgba(68,96,255,.22);
   transition: outline .25s ease, box-shadow .25s ease;
 }
+
+.contact-block{
+  text-align:center;
+}
+
+.contact-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:14px;
+}
+
+.contact-buttons .btn{
+  min-width:160px;
+}.contact-block{
+  text-align:center;
+}
+
+.contact-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:14px;
+}
+
+.contact-buttons .btn{
+  min-width:160px;
+}
