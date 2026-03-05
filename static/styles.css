@@ -36,13 +36,14 @@ body{
 .brand .sub{ font-size:12px; opacity:.7; margin-top:2px; }
 .iconbtn{ border:0; background:#fff; border-radius:12px; padding:10px 12px; cursor:pointer; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
 
+/* ✅ основной экран */
 .screen{
   flex: 1;
   padding: 18px;
   padding-bottom: 110px; /* место под табы */
   overflow: auto;
 
-  /* ✅ Apple-style centered container */
+  /* Apple-style centered container */
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
@@ -55,6 +56,7 @@ body{
   align-items:center;
 }
 
+/* ✅ нижние табы: 4 кнопки, ровно и симметрично */
 .tabs{
   position: fixed;
   left: 50%;
@@ -65,37 +67,41 @@ body{
   backdrop-filter: blur(10px);
   border-radius: 18px;
   padding: 10px;
+
   display: grid;
-
-  /* ✅ теперь 4 кнопки (без "Квиз") */
-  grid-template-columns: repeat(4, 1fr);
-
+  grid-template-columns: repeat(4, minmax(0, 1fr)); /* ✅ 4 колонки */
   gap: 8px;
+
   box-shadow: 0 12px 40px rgba(0,0,0,.10);
   z-index: 2;
 }
 
 .tab{
   border: 0;
-  background: transparent;
   padding: 12px 10px;
   border-radius: 14px;
   cursor: pointer;
-  font-weight: 600;
-  opacity: .85;
+  font-weight: 700;
 
-  /* ✅ центр текста внутри таба */
+  /* ✅ идеальное выравнивание текста */
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
+
+  /* ✅ одинаковая высота */
+  min-height: 44px;
+
+  /* ✅ чтобы подписи не ломали сетку */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.tab.active{ background: rgba(88,108,255,.10); opacity:1; }
-.tab.primary{ background: #4460ff; color:#fff; }
-
+/* ===== Footer ===== */
 .footer{ padding: 10px 18px 120px; opacity:.65; font-size:12px; }
 
+/* ===== Typography ===== */
 .h1{ font-size: 34px; line-height: 1.05; font-weight: 900; margin: 14px 0; text-align:center; }
 .accent{ color:#4460ff; }
 .lead{ opacity:.85; max-width: 880px; text-align:center; }
@@ -197,7 +203,6 @@ body{
 
 .cards.two{ grid-template-columns: repeat(2, minmax(0,1fr)); }
 
-/* карточки: светло-голубые + shimmer */
 .card{
   position: relative;
   overflow: hidden;
@@ -212,7 +217,6 @@ body{
   border-radius: 18px;
   padding: 14px;
   box-shadow: 0 12px 36px rgba(68,96,255,.14);
-
   text-align:left;
 }
 
@@ -225,7 +229,6 @@ body{
   height:160%;
   transform: skewX(-20deg);
   pointer-events:none;
-
   background: linear-gradient(
     90deg,
     rgba(255,255,255,0) 0%,
@@ -234,16 +237,15 @@ body{
     rgba(255,255,255,.22) 60%,
     rgba(255,255,255,0) 100%
   );
-
   opacity:.65;
   animation: btnShine 9s ease-in-out infinite;
 }
 
 .card small{ display:block; opacity:.75; margin-top:6px; }
 .bullets{ margin-top:10px; opacity:.85; font-size:13px; }
-
 .section-title{ font-weight: 900; font-size: 18px; margin-bottom: 8px; text-align:center; }
 
+/* ===== Forms ===== */
 .form{
   width: 100%;
   max-width: 720px;
@@ -270,22 +272,7 @@ body{
 .row{ display:flex; gap:10px; align-items:center; flex-wrap: wrap; margin-top: 12px; justify-content:center; }
 .checkbox{ font-size: 13px; opacity:.85; display:flex; gap:8px; align-items:center; }
 
-@media (max-width: 820px){
-  .cards{ grid-template-columns: 1fr; }
-  .cards.two{ grid-template-columns: 1fr; }
-  .form{ grid-template-columns: 1fr; }
-  .h1{ font-size: 28px; }
-}
-
-@media (min-width: 1100px){
-  .screen, .cards, .form{ max-width: 860px; }
-}
-
-@media (max-width: 420px){
-  .screen{ padding-left: 16px; padding-right: 16px; }
-}
-
-/* ===== Bottom tabs style like buttons ===== */
+/* ===== Bottom tabs (button look) ===== */
 .tabs .tab{
   position: relative;
   overflow: hidden;
@@ -295,7 +282,7 @@ body{
   opacity: 1;
 }
 
-/* ✅ слева направо чуть светлее — 4 кнопки */
+/* ✅ градация яркости — 4 кнопки */
 .tabs .tab:nth-child(1){ filter: brightness(.95); }
 .tabs .tab:nth-child(2){ filter: brightness(1.02); }
 .tabs .tab:nth-child(3){ filter: brightness(1.08); }
@@ -323,7 +310,8 @@ body{
 }
 
 .tabs .tab.active{
-  box-shadow: 0 14px 34px rgba(68,96,255,.35);
+  filter: brightness(1.10);
+  box-shadow: 0 14px 34px rgba(68,96,255,.38);
 }
 
 /* cards-as-buttons */
@@ -335,3 +323,365 @@ body{
   background: none;
 }
 .cardbtn:active{ transform: translateY(1px); }
+
+/* ✅ страховка: если кнопка "Квиз" случайно осталась в HTML — скрываем */
+.tabs .tab[data-go="quiz"]{ display:none !important; }
+
+/* ===== Responsive ===== */
+@media (max-width: 820px){
+  .cards{ grid-template-columns: 1fr; }
+  .cards.two{ grid-template-columns: 1fr; }
+  .form{ grid-template-columns: 1fr; }
+  .h1{ font-size: 28px; }
+}
+
+@media (min-width: 1100px){
+  .screen, .cards, .form{ max-width: 860px; }
+}
+
+@media (max-width: 420px){
+  .screen{ padding-left: 16px; padding-right: 16px; }
+}html, body { height: 100%; margin: 0; }
+
+/* ✅ фон чуть темнее + больше синего (под сайт + mini app) */
+body{
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text, #0b1220);
+  background: linear-gradient(
+    180deg,
+    #f2f6ff 0%,
+    #e9f0ff 40%,
+    #e1eaff 100%
+  );
+}
+
+.bg{
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(900px 700px at 20% 75%, rgba(68,96,255,.28), transparent 65%),
+    radial-gradient(800px 600px at 80% 20%, rgba(70,120,255,.25), transparent 65%),
+    radial-gradient(700px 600px at 50% -10%, rgba(120,150,255,.20), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app{
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px; }
+.brand .logo{ font-weight:800; letter-spacing:.5px; }
+.brand .sub{ font-size:12px; opacity:.7; margin-top:2px; }
+.iconbtn{ border:0; background:#fff; border-radius:12px; padding:10px 12px; cursor:pointer; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+
+/* ✅ основной экран */
+.screen{
+  flex: 1;
+  padding: 18px;
+  padding-bottom: 110px; /* место под табы */
+  overflow: auto;
+
+  /* Apple-style centered container */
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 18px;
+  padding-right: 18px;
+  text-align: center;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* ✅ нижние табы: 4 кнопки, ровно и симметрично */
+.tabs{
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  width: min(980px, calc(100% - 24px));
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 10px;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); /* ✅ 4 колонки */
+  gap: 8px;
+
+  box-shadow: 0 12px 40px rgba(0,0,0,.10);
+  z-index: 2;
+}
+
+.tab{
+  border: 0;
+  padding: 12px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+
+  /* ✅ идеальное выравнивание текста */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  /* ✅ одинаковая высота */
+  min-height: 44px;
+
+  /* ✅ чтобы подписи не ломали сетку */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== Footer ===== */
+.footer{ padding: 10px 18px 120px; opacity:.65; font-size:12px; }
+
+/* ===== Typography ===== */
+.h1{ font-size: 34px; line-height: 1.05; font-weight: 900; margin: 14px 0; text-align:center; }
+.accent{ color:#4460ff; }
+.lead{ opacity:.85; max-width: 880px; text-align:center; }
+
+.hero-pill{
+  display:inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(88,108,255,.10);
+  color:#2c3cff;
+  font-weight: 700;
+  font-size: 12px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.actions{ display:flex; gap:10px; flex-wrap:wrap; margin: 14px 0; justify-content:center; }
+
+/* ===== BUTTONS ===== */
+.btn{
+  border:0;
+  cursor:pointer;
+  padding: 12px 14px;
+  border-radius: 14px;
+
+  background:#4460ff;
+  color:#fff;
+  font-weight: 700;
+
+  box-shadow: 0 12px 34px rgba(68,96,255,.30);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.primary,
+.btn.ghost{
+  background:#4460ff;
+  color:#fff;
+  box-shadow: 0 12px 34px rgba(68,96,255,.30);
+}
+
+/* слева направо делаем чуть светлее (верхние кнопки в .actions) */
+.actions .btn:nth-child(1){ filter: brightness(0.96); }
+.actions .btn:nth-child(2){ filter: brightness(1.02); }
+.actions .btn:nth-child(3){ filter: brightness(1.08); }
+.actions .btn:nth-child(4){ filter: brightness(1.14); }
+.actions .btn:nth-child(5){ filter: brightness(1.20); }
+
+@keyframes btnShine{
+  0%   { left:-70%; opacity:0; }
+  10%  { opacity:1; }
+  45%  { left:130%; opacity:1; }
+  46%  { opacity:0; }
+  100% { left:130%; opacity:0; }
+}
+
+.btn::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  pointer-events:none;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.18) 40%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity: .85;
+  animation: btnShine 8.4s ease-in-out infinite;
+}
+
+@media (hover: hover){
+  .btn:hover::after{ animation-duration: 5.9s; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .btn::after{ animation:none !important; display:none; }
+}
+
+/* ===== Cards / Layout ===== */
+.cards{
+  width: 100%;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:12px;
+  margin-top: 14px;
+}
+
+.cards.two{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+.card{
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    #eef5ff 0%,
+    #e4efff 45%,
+    #d9e9ff 100%
+  );
+
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 12px 36px rgba(68,96,255,.14);
+  text-align:left;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  pointer-events:none;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.22) 40%,
+    rgba(255,255,255,.70) 50%,
+    rgba(255,255,255,.22) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity:.65;
+  animation: btnShine 9s ease-in-out infinite;
+}
+
+.card small{ display:block; opacity:.75; margin-top:6px; }
+.bullets{ margin-top:10px; opacity:.85; font-size:13px; }
+.section-title{ font-weight: 900; font-size: 18px; margin-bottom: 8px; text-align:center; }
+
+/* ===== Forms ===== */
+.form{
+  width: 100%;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+  margin-top: 12px;
+
+  text-align:left;
+}
+.field label{ display:block; font-size:12px; opacity:.7; margin-bottom:6px; }
+.field.full{ grid-column: 1 / -1; }
+.input, .select{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: rgba(255,255,255,.95);
+  outline: none;
+}
+.row{ display:flex; gap:10px; align-items:center; flex-wrap: wrap; margin-top: 12px; justify-content:center; }
+.checkbox{ font-size: 13px; opacity:.85; display:flex; gap:8px; align-items:center; }
+
+/* ===== Bottom tabs (button look) ===== */
+.tabs .tab{
+  position: relative;
+  overflow: hidden;
+  background: #4460ff;
+  color:#fff;
+  box-shadow: 0 10px 26px rgba(68,96,255,.25);
+  opacity: 1;
+}
+
+/* ✅ градация яркости — 4 кнопки */
+.tabs .tab:nth-child(1){ filter: brightness(.95); }
+.tabs .tab:nth-child(2){ filter: brightness(1.02); }
+.tabs .tab:nth-child(3){ filter: brightness(1.08); }
+.tabs .tab:nth-child(4){ filter: brightness(1.14); }
+
+.tabs .tab::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-70%;
+  width:45%;
+  height:160%;
+  transform: skewX(-20deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.18) 40%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity:.7;
+  animation: btnShine 8.4s ease-in-out infinite;
+  pointer-events:none;
+}
+
+.tabs .tab.active{
+  filter: brightness(1.10);
+  box-shadow: 0 14px 34px rgba(68,96,255,.38);
+}
+
+/* cards-as-buttons */
+.cardbtn{
+  width:100%;
+  text-align:left;
+  border:0;
+  cursor:pointer;
+  background: none;
+}
+.cardbtn:active{ transform: translateY(1px); }
+
+/* ✅ страховка: если кнопка "Квиз" случайно осталась в HTML — скрываем */
+.tabs .tab[data-go="quiz"]{ display:none !important; }
+
+/* ===== Responsive ===== */
+@media (max-width: 820px){
+  .cards{ grid-template-columns: 1fr; }
+  .cards.two{ grid-template-columns: 1fr; }
+  .form{ grid-template-columns: 1fr; }
+  .h1{ font-size: 28px; }
+}
+
+@media (min-width: 1100px){
+  .screen, .cards, .form{ max-width: 860px; }
+}
+
+@media (max-width: 420px){
+  .screen{ padding-left: 16px; padding-right: 16px; }
+}
