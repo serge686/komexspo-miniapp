@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <div class="bg"></div>
+  <div class="bg" aria-hidden="true"></div>
 
   <div class="app">
     <header class="topbar">
@@ -20,18 +20,20 @@
         <div class="logo">КОМЭКСПО</div>
         <div class="sub">AI HR-агентство • найм и HR-автоматизация</div>
       </div>
-      <button class="iconbtn" id="btnBack" aria-label="Назад">←</button>
+
+      <!-- кнопка назад -->
+      <button class="iconbtn" id="btnBack" type="button" aria-label="Назад">←</button>
     </header>
 
     <!-- сюда рисует app.js -->
-    <main id="screen" class="screen"></main>
+    <main id="screen" class="screen" role="main"></main>
 
-    <nav class="tabs">
-      <button class="tab" data-go="home">Главная</button>
-      <button class="tab" data-go="quiz">Квиз</button>
-      <button class="tab" data-go="packages">Пакеты</button>
-      <button class="tab" data-go="cases">Кейсы</button>
-      <button class="tab primary" data-go="lead">Заявка</button>
+    <!-- ✅ Квиз убран. ✅ 4 ровные кнопки -->
+    <nav class="tabs" aria-label="Навигация">
+      <button class="tab" data-go="home" type="button">Главная</button>
+      <button class="tab" data-go="packages" type="button">Пакеты</button>
+      <button class="tab" data-go="cases" type="button">Кейсы</button>
+      <button class="tab primary" data-go="lead" type="button">Заявка</button>
     </nav>
 
     <footer class="footer">
