@@ -1,3 +1,5 @@
+// static/app.js
+
 const tg = window.Telegram?.WebApp;
 if (tg) tg.expand();
 
@@ -6,23 +8,21 @@ const btnBack = document.getElementById("btnBack");
 
 const state = {
   page: "home",
-  history: ["home"]
+  history: ["home"],
 };
 
-function qs(sel){ return document.querySelector(sel); }
-function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
+function qs(sel) { return document.querySelector(sel); }
+function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
 
-function go(page){
-  if (state.page !== page) {
-    state.history.push(page);
-  }
+/* ---------- NAV ---------- */
+function go(page) {
+  if (state.page !== page) state.history.push(page);
   state.page = page;
   render();
   updateBack();
 }
 
-function back(){
-  // если есть история — назад по истории
+function back() {
   if (state.history.length > 1) {
     state.history.pop();
     state.page = state.history[state.history.length - 1];
@@ -30,65 +30,48 @@ function back(){
     updateBack();
     return;
   }
-  // если истории нет — закрыть Mini App (или можно вести на home)
   if (tg?.close) tg.close();
   else go("home");
 }
 
-function updateBack(){
-  // показываем кнопку назад только если не home
+function updateBack() {
   if (!btnBack) return;
   btnBack.style.visibility = (state.page === "home") ? "hidden" : "visible";
 }
 
 /* ---------- Tabs ---------- */
-qsa(".tab").forEach(btn=>{
+qsa(".tab").forEach(btn => {
   btn.addEventListener("click", () => go(btn.dataset.go));
 });
-
 if (btnBack) btnBack.addEventListener("click", back);
 
 /* ---------- Helpers ---------- */
-function scrollToId(id){
+function scrollToId(id) {
   const el = document.getElementById(id);
   if (!el) return;
   el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function openLink(url){
-  // В Telegram Mini App лучше так:
+function openLink(url) {
   if (tg?.openLink) tg.openLink(url);
   else window.open(url, "_blank", "noopener,noreferrer");
 }
 
-function contactBlock(){
-  // 👉 подставь свои реальные ссылки/телефон
-  const tgLink = "https://t.me/AI_KomExpo_bot";
-  const waLink = "https://wa.me/"; // например: https://wa.me/79990001122
-  const email = "mailto:info@komexspo.ru";
-
+/* ---------- Minimal contacts (centered) ---------- */
+function contactBlock() {
   return `
-    <section class="contact" id="contact">
-      <h2 class="section-title">Как с нами связаться</h2>
-      <p class="lead contact-lead">
-        Напиши удобным способом — ответим быстро и подскажем оптимальный пакет/сценарий.
-      </p>
+    <section class="contact-minimal" id="contact">
+      <div class="contact-title">Как с нами связаться</div>
+      <div class="contact-text">
+        Напишите удобным способом — ответим быстро и подскажем оптимальное решение.
+      </div>
 
-      <div class="contact-grid">
-        <button class="card contact-card" type="button" id="contactTg">
-          <b>Telegram</b>
-          <small>Самый быстрый ответ • чат 1:1</small>
-        </button>
-
-        <button class="card contact-card" type="button" id="contactWa">
-          <b>WhatsApp</b>
-          <small>Для звонка/голоса • коротко по делу</small>
-        </button>
-
-        <button class="card contact-card" type="button" id="contactMail">
-          <b>Email</b>
-          <small>Для ТЗ/файлов/документов</small>
-        </button>
+      <div class="contact-links">
+        <button class="contact-link" type="button" id="contactTg">Telegram</button>
+        <span class="contact-dot">•</span>
+        <button class="contact-link" type="button" id="contactWa">WhatsApp</button>
+        <span class="contact-dot">•</span>
+        <button class="contact-link" type="button" id="contactMail">Email</button>
       </div>
 
       <div class="actions contact-actions">
@@ -99,9 +82,10 @@ function contactBlock(){
   `;
 }
 
-function bindContacts(){
+function bindContacts() {
+  // 👉 подставь реальные ссылки
   const tgLink = "https://t.me/AI_KomExpo_bot";
-  const waLink = "https://wa.me/";       // подставь номер
+  const waLink = "https://wa.me/"; // например: https://wa.me/79990001122
   const email = "mailto:info@komexspo.ru";
 
   const a = qs("#contactTg");
@@ -113,12 +97,13 @@ function bindContacts(){
   if (a) a.onclick = () => openLink(tgLink);
   if (b) b.onclick = () => openLink(waLink);
   if (c) c.onclick = () => openLink(email);
+
   if (lead) lead.onclick = () => go("lead");
   if (top) top.onclick = () => scrollToId("top");
 }
 
 /* ---------- Render ---------- */
-function render(){
+function render() {
   if (state.page === "home") homeScreen();
   if (state.page === "packages") packagesScreen();
   if (state.page === "cases") casesScreen();
@@ -130,7 +115,7 @@ function render(){
 }
 
 /* ---------- HOME ---------- */
-function homeScreen(){
+function homeScreen() {
   screen.innerHTML = `
     <div id="top"></div>
 
@@ -153,15 +138,15 @@ function homeScreen(){
     <div class="cards" id="services">
       <button class="cardbtn" type="button" id="card1">
         <div class="card">
-          <b>AI-рекрутер: закрываем быстрее</b>
-          <small>Отклики, ответы, интервью — 24/7, без просадок по скорости</small>
+          <b>AI-рекрутер: скорость найма</b>
+          <small>Отвечаем, квалифицируем, назначаем интервью — 24/7</small>
         </div>
       </button>
 
       <button class="cardbtn" type="button" id="card2">
         <div class="card">
-          <b>Сорсинг + скрининг: только “свои”</b>
-          <small>Поиск, фильтр, shortlist — меньше шума, больше попаданий</small>
+          <b>Сорсинг + скрининг: точное попадание</b>
+          <small>Поиск, фильтр, shortlist — меньше “мимо”, больше релеванта</small>
         </div>
       </button>
 
@@ -177,13 +162,13 @@ function homeScreen(){
     <section class="detail" id="sec-recruiter">
       <h2 class="section-title">AI-рекрутер</h2>
       <p class="lead">
-        Ускоряем найм: отвечаем кандидатам, квалифицируем, назначаем интервью и держим воронку в движении.
+        Держим найм в движении: ответы кандидату за минуты, квалификация и интервью без “провалов”.
       </p>
       <div class="bullets">
-        • Ответы на отклики и первичный контакт за минуты<br>
-        • Квалификация и контроль статусов кандидатов<br>
+        • Быстрый контакт с кандидатом и первичный скрининг<br>
         • Назначение интервью + напоминания<br>
-        • Снижение потерь кандидатов на “молчании”
+        • Контроль статусов и воронки<br>
+        • Меньше потерь кандидатов из-за “тишины”
       </div>
       <div class="actions">
         <button class="btn primary" type="button" id="secRecLead">Оставить заявку</button>
@@ -194,13 +179,13 @@ function homeScreen(){
     <section class="detail" id="sec-sourcing">
       <h2 class="section-title">Сорсинг + скрининг</h2>
       <p class="lead">
-        Находим и отбираем сильных: меньше “мимо”, больше релевантных кандидатов в shortlist.
+        Находим и отбираем сильных: меньше шума, больше точных кандидатов в shortlist.
       </p>
       <div class="bullets">
         • Поиск кандидатов по профилю и требованиям<br>
-        • Автоскрининг резюме и первичное интервью<br>
+        • Автоскрининг резюме и первичные вопросы<br>
         • Shortlist с аргументацией “почему подходит”<br>
-        • Экономия времени рекрутера/нанимающего
+        • Экономия времени рекрутера и нанимающего
       </div>
       <div class="actions">
         <button class="btn primary" type="button" id="secSorLead">Оставить заявку</button>
@@ -217,7 +202,7 @@ function homeScreen(){
         • Онбординг-сценарии с контролем прогресса<br>
         • FAQ/база знаний и шаблоны документов<br>
         • HR-helpdesk: ответы 24/7 + маршрутизация<br>
-        • Аналитика обращений и “точки потерь”
+        • Аналитика обращений и точки потерь
       </div>
       <div class="actions">
         <button class="btn primary" type="button" id="secHrLead">Оставить заявку</button>
@@ -248,7 +233,7 @@ function homeScreen(){
 }
 
 /* ---------- PACKAGES ---------- */
-function packagesScreen(){
+function packagesScreen() {
   screen.innerHTML = `
     <div id="top"></div>
 
@@ -287,12 +272,11 @@ function packagesScreen(){
 
     ${contactBlock()}
   `;
-
   bindContacts();
 }
 
 /* ---------- CASES ---------- */
-function casesScreen(){
+function casesScreen() {
   screen.innerHTML = `
     <div id="top"></div>
 
@@ -301,12 +285,12 @@ function casesScreen(){
     <div class="cards">
       <div class="card">
         <b>IT компания</b>
-        <small>закрыли 12 вакансий за 21 день</small>
+        <small>12 вакансий за 21 день</small>
       </div>
 
       <div class="card">
         <b>Retail сеть</b>
-        <small>автоматизация найма 120 сотрудников</small>
+        <small>массовый найм 120 сотрудников</small>
       </div>
 
       <div class="card">
@@ -317,17 +301,13 @@ function casesScreen(){
 
     ${contactBlock()}
   `;
-
   bindContacts();
 }
 
 /* ---------- LEAD ---------- */
-function leadScreen(){
+function leadScreen() {
   const user = tg?.initDataUnsafe?.user;
-
-  const name = user
-    ? `${user.first_name || ""} ${user.last_name || ""}`.trim()
-    : "";
+  const name = user ? `${user.first_name || ""} ${user.last_name || ""}`.trim() : "";
 
   screen.innerHTML = `
     <div id="top"></div>
@@ -399,24 +379,24 @@ function leadScreen(){
   bindContacts();
 }
 
-function formatPhone(input){
+function formatPhone(input) {
   input.addEventListener("input", () => {
-    let x = input.value.replace(/\D/g,"");
+    let x = input.value.replace(/\D/g, "");
     if (x.startsWith("8")) x = "7" + x.slice(1);
 
-    if (x.startsWith("7")){
+    if (x.startsWith("7")) {
       x = x.slice(1);
       let formatted = "+7";
-      if(x.length>0) formatted += " (" + x.slice(0,3);
-      if(x.length>=3) formatted += ") " + x.slice(3,6);
-      if(x.length>=6) formatted += "-" + x.slice(6,8);
-      if(x.length>=8) formatted += "-" + x.slice(8,10);
+      if (x.length > 0) formatted += " (" + x.slice(0, 3);
+      if (x.length >= 3) formatted += ") " + x.slice(3, 6);
+      if (x.length >= 6) formatted += "-" + x.slice(6, 8);
+      if (x.length >= 8) formatted += "-" + x.slice(8, 10);
       input.value = formatted;
     }
   });
 }
 
-function bindLead(){
+function bindLead() {
   const phoneInput = qs("#phone");
   if (phoneInput) formatPhone(phoneInput);
 
@@ -437,7 +417,7 @@ function bindLead(){
       vacancies: qs("#vacancies")?.value || "",
       contact: qs("#contact")?.value || "",
       comment: qs("#comment")?.value || "",
-      telegram_user: tg?.initDataUnsafe?.user || null
+      telegram_user: tg?.initDataUnsafe?.user || null,
     };
 
     console.log("lead", data);
