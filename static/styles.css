@@ -727,3 +727,24 @@ textarea.input{
   .cards.two{ grid-template-columns: 1fr; }
   .h1{ font-size: 28px; }
 }
+
+/* --- HOME секции под карточками --- */
+.home-sections{
+  width: 100%;
+  max-width: 720px;
+  margin: 14px auto 0;
+  display: grid;
+  gap: 12px;
+}
+
+/* чуть больше воздуха у секций */
+.section{
+  padding: 16px;
+}
+
+/* мягкая подсветка после скролла */
+.flash{
+  outline: 2px solid rgba(68,96,255,.35);
+  box-shadow: 0 18px 46px rgba(68,96,255,.22);
+  transition: outline .25s ease, box-shadow .25s ease;
+}
