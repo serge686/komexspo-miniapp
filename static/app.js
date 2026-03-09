@@ -1,9 +1,5 @@
 const tg = window.Telegram?.WebApp;
-
-if (tg) {
-  tg.ready();
-  tg.expand();
-}
+if (tg) tg.expand();
 
 const screen = document.getElementById("screen");
 const btnBack = document.getElementById("btnBack");
@@ -13,333 +9,180 @@ const state = {
   history: ["home"]
 };
 
-function qsa(sel, root = document) {
-  return Array.from(root.querySelectorAll(sel));
+function qs(sel) {
+  return document.querySelector(sel);
 }
 
-function setActiveTab() {
-  qsa(".tab[data-go]").forEach((tab) => {
-    const isActive = tab.dataset.go === state.page;
-    tab.classList.toggle("is-active", isActive);
-  });
-}
-
-function updateBack() {
-  const show = state.history.length > 1 || state.page !== "home";
-
-  if (btnBack) {
-    btnBack.style.display = show ? "inline-flex" : "none";
-  }
-
-  if (tg?.BackButton) {
-    if (show) tg.BackButton.show();
-    else tg.BackButton.hide();
-  }
-}
-
-function updateMainButton() {
-  if (!tg?.MainButton) return;
-
-  if (state.page === "home" || state.page === "packages") {
-    tg.MainButton.setText("Оставить заявку");
-    tg.MainButton.show();
-    return;
-  }
-
-  tg.MainButton.hide();
+function qsa(sel) {
+  return Array.from(document.querySelectorAll(sel));
 }
 
 function go(page) {
   if (state.page !== page) {
     state.history.push(page);
-    state.page = page;
   }
-
+  state.page = page;
   render();
   updateBack();
-  updateMainButton();
-  setActiveTab();
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function back() {
   if (state.history.length > 1) {
     state.history.pop();
     state.page = state.history[state.history.length - 1];
-  } else {
-    state.page = "home";
-  }
-
-  render();
-  updateBack();
-  updateMainButton();
-  setActiveTab();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function scrollToSection(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  el.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-}
-
-function handleLeadAction() {
-  if (state.page !== "home") {
-    go("home");
-    setTimeout(() => scrollToSection("contact-form"), 140);
-    return;
-  }
-
-  scrollToSection("contact-form");
-}
-
-function openExternal(url) {
-  if (!url) return;
-
-  if (tg?.openLink) {
-    tg.openLink(url);
-  } else {
-    window.open(url, "_blank", "noopener,noreferrer");
+    render();
+    updateBack();
   }
 }
 
-function sendMail(email) {
-  if (!email) return;
-  window.location.href = `mailto:${email}`;
-}
-
-function bindActions() {
-  qsa("[data-go]").forEach((el) => {
-    el.addEventListener("click", () => {
-      const page = el.dataset.go;
-      if (page) go(page);
-    });
-  });
-
-  qsa("[data-scroll]").forEach((el) => {
-    el.addEventListener("click", () => {
-      const target = el.dataset.scroll;
-      if (target) scrollToSection(target);
-    });
-  });
-
-  qsa("[data-link]").forEach((el) => {
-    el.addEventListener("click", () => {
-      openExternal(el.dataset.link);
-    });
-  });
-
-  qsa("[data-mail]").forEach((el) => {
-    el.addEventListener("click", () => {
-      sendMail(el.dataset.mail);
-    });
-  });
-
-  qsa("[data-lead]").forEach((el) => {
-    el.addEventListener("click", handleLeadAction);
-  });
-}
-
-function renderHome() {
-  return `
-    <div class="page page-home">
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="hero-text">
-            Закрываем вакансии быстрее: AI-рекрутер, точный сорсинг и HR-автоматизация — без ручной рутины.
-          </p>
-        </div>
-
-        <div class="hero-cta">
-          <button class="btn btn-primary" type="button" data-lead>Оставить заявку</button>
-          <button class="btn btn-secondary" type="button" data-go="packages">Пакеты</button>
-        </div>
-      </section>
-
-      <section class="cards-preview">
-        <button class="info-card" type="button" data-scroll="ai-recruiter">
-          <h3>AI-рекрутер: скорость найма</h3>
-          <p>Отвечаем, квалифицируем, назначаем интервью — 24/7</p>
-        </button>
-
-        <button class="info-card" type="button" data-scroll="sourcing">
-          <h3>Сорсинг + скрининг: точное попадание</h3>
-          <p>Поиск, фильтр, shortlist — меньше “мимо”, больше релеванта</p>
-        </button>
-
-        <button class="info-card" type="button" data-scroll="hr-automation">
-          <h3>HR-автоматизация: минус рутина</h3>
-          <p>Онбординг, база знаний, helpdesk — процессы на автопилоте</p>
-        </button>
-      </section>
-
-      <nav class="section-nav" aria-label="Секции">
-        <button class="chip" type="button" data-scroll="ai-recruiter">AI-рекрутер</button>
-        <button class="chip" type="button" data-scroll="sourcing">Сорсинг</button>
-        <button class="chip" type="button" data-scroll="hr-automation">HR-автоматизация</button>
-        <button class="chip" type="button" data-scroll="contacts">Контакты</button>
-      </nav>
-
-      <section id="ai-recruiter" class="content-section">
-        <h2>AI-рекрутер</h2>
-        <p>
-          Держим найм в движении: ответы кандидату за минуты, квалификация и интервью без провалов.
-        </p>
-        <ul class="feature-list">
-          <li>Быстрый контакт с кандидатами и первичный скрининг</li>
-          <li>Назначение интервью и напоминания</li>
-          <li>Контроль статусов и воронки</li>
-          <li>Меньше потерь кандидатов из-за тишины</li>
-        </ul>
-      </section>
-
-      <section id="sourcing" class="content-section">
-        <h2>Сорсинг + скрининг</h2>
-        <p>
-          Находим и отбираем сильных кандидатов: меньше шума, больше точности в shortlist.
-        </p>
-        <ul class="feature-list">
-          <li>Поиск кандидатов по профилю и требованиям</li>
-          <li>Автоскрининг резюме и первичные вопросы</li>
-          <li>Shortlist с аргументацией почему подходит</li>
-          <li>Экономия времени рекрутера и нанимающего</li>
-        </ul>
-      </section>
-
-      <section id="hr-automation" class="content-section">
-        <h2>HR-автоматизация</h2>
-        <p>
-          Убираем рутину из HR-процессов и ускоряем внутренние операции команды.
-        </p>
-        <ul class="feature-list">
-          <li>Онбординг новых сотрудников</li>
-          <li>FAQ, база знаний и HR-helpdesk</li>
-          <li>Автоматизация типовых запросов</li>
-          <li>Единая точка коммуникации для команды</li>
-        </ul>
-      </section>
-
-      <section id="contacts" class="content-section contacts-section">
-        <h2>Контакты</h2>
-        <div class="contact-card">
-          <div class="contact-row">
-            <strong>KomExpo</strong>
-          </div>
-          <div class="contact-row">
-            <span>Email</span>
-            <button class="link-btn" type="button" data-mail="info@komexpo.de">info@komexpo.de</button>
-          </div>
-          <div class="contact-row">
-            <span>Сайт</span>
-            <button class="link-btn" type="button" data-link="https://komexspo-miniapp.onrender.com">Открыть</button>
-          </div>
-          <div class="contact-row">
-            <span>GitHub</span>
-            <button class="link-btn" type="button" data-link="https://github.com/serge686/komexspo-miniapp">Репозиторий</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact-form" class="content-section final-cta">
-        <h2>Оставить заявку</h2>
-        <p>Выберите удобный способ связи.</p>
-        <div class="hero-cta">
-          <button class="btn btn-primary" type="button" data-mail="info@komexpo.de">Написать на email</button>
-          <button class="btn btn-secondary" type="button" data-go="packages">Смотреть пакеты</button>
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-function renderPackages() {
-  return `
-    <div class="page page-packages">
-      <section class="page-head">
-        <h1>Пакеты</h1>
-        <p>Выберите формат подключения под ваш текущий объём найма.</p>
-      </section>
-
-      <section class="packages-list">
-        <div class="package-card">
-          <h3>Start</h3>
-          <p>Для точечных вакансий и быстрого запуска.</p>
-        </div>
-
-        <div class="package-card">
-          <h3>Growth</h3>
-          <p>Для постоянного потока подбора и shortlist-кандидатов.</p>
-        </div>
-
-        <div class="package-card">
-          <h3>Scale</h3>
-          <p>Для команд, которым нужны HR-автоматизация и AI-рекрутер 24/7.</p>
-        </div>
-      </section>
-
-      <section class="content-section final-cta">
-        <h2>Обсудить подключение</h2>
-        <p>Вернёмся на главную и откроем блок заявки.</p>
-        <div class="hero-cta">
-          <button class="btn btn-primary" type="button" data-lead>Оставить заявку</button>
-          <button class="btn btn-secondary" type="button" data-go="home">На главную</button>
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-function render() {
-  if (!screen) return;
-
-  switch (state.page) {
-    case "packages":
-      screen.innerHTML = renderPackages();
-      break;
-    case "home":
-    default:
-      screen.innerHTML = renderHome();
-      break;
-  }
-
-  bindActions();
+function updateBack() {
+  if (!btnBack) return;
+  btnBack.style.display = state.history.length > 1 ? "inline-flex" : "none";
 }
 
 if (btnBack) {
   btnBack.addEventListener("click", back);
 }
 
-if (tg?.BackButton) {
-  tg.BackButton.onClick(back);
+function renderHome() {
+  return `
+    <section class="hero hero-parallax" id="hero">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-orb hero-orb-3"></div>
+
+      <div class="hero-shine-bg"></div>
+
+      <div class="hero-inner">
+        <div class="hero-text" data-parallax="text">
+          <div class="hero-badge reveal reveal-1">KomExpo Mini App</div>
+
+          <h1 class="hero-title reveal reveal-2">
+            Добро пожаловать в
+            <span class="hero-title-gradient">KomExpo</span>
+          </h1>
+
+          <p class="hero-subtitle reveal reveal-3">
+            Современное Mini App пространство для быстрого доступа к сервисам,
+            информации и возможностям выставки — красиво, удобно и в одном месте.
+          </p>
+
+          <div class="hero-actions reveal reveal-4">
+            <button class="hero-btn hero-btn-primary shine-btn" onclick="go('catalog')">
+              <span class="btn-text">Start</span>
+              <span class="btn-shine"></span>
+            </button>
+
+            <button class="hero-btn hero-btn-secondary" onclick="go('about')">
+              Подробнее
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
-if (tg?.MainButton) {
-  tg.MainButton.onClick(handleLeadAction);
-  tg.MainButton.setParams({
-    is_visible: true,
-    text: "Оставить заявку"
-  });
+function renderCatalog() {
+  return `
+    <section class="page-card">
+      <h2 class="page-title">Каталог</h2>
+      <p class="page-text">Здесь будет каталог разделов, участников или сервисов.</p>
+    </section>
+  `;
 }
 
-const qualityBadge = document.getElementById("qualityBadge");
+function renderAbout() {
+  return `
+    <section class="page-card">
+      <h2 class="page-title">О проекте</h2>
+      <p class="page-text">
+        KomExpo Mini App — это удобный цифровой интерфейс для навигации,
+        информации и быстрых действий внутри проекта.
+      </p>
+    </section>
+  `;
+}
 
-if (qualityBadge) {
-  qualityBadge.addEventListener("click", () => {
-    const url = "https://getcourse.ru/qualityreestr~1700002963a49da13542e0726b7bb758";
+function attachHeroEffects() {
+  const hero = document.getElementById("hero");
+  if (!hero) return;
 
-    if (tg?.openLink) {
-      tg.openLink(url);
-    } else {
-      window.open(url, "_blank", "noopener,noreferrer");
+  const text = hero.querySelector('[data-parallax="text"]');
+  const orb1 = hero.querySelector(".hero-orb-1");
+  const orb2 = hero.querySelector(".hero-orb-2");
+  const orb3 = hero.querySelector(".hero-orb-3");
+
+  let currentX = 0;
+  let currentY = 0;
+  let targetX = 0;
+  let targetY = 0;
+  let rafId = null;
+
+  function animate() {
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+
+    if (text) {
+      text.style.transform = `translate3d(${currentX * 10}px, ${currentY * 10}px, 0)`;
     }
-  });
+
+    if (orb1) {
+      orb1.style.transform = `translate3d(${currentX * 18}px, ${currentY * 18}px, 0) scale(1.02)`;
+    }
+
+    if (orb2) {
+      orb2.style.transform = `translate3d(${currentX * -22}px, ${currentY * -22}px, 0) scale(1.04)`;
+    }
+
+    if (orb3) {
+      orb3.style.transform = `translate3d(${currentX * 14}px, ${currentY * -14}px, 0) scale(1.03)`;
+    }
+
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function handleMove(e) {
+    const rect = hero.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+
+    targetX = (x - 0.5) * 2;
+    targetY = (y - 0.5) * 2;
+  }
+
+  function resetMove() {
+    targetX = 0;
+    targetY = 0;
+  }
+
+  hero.addEventListener("mousemove", handleMove);
+  hero.addEventListener("mouseleave", resetMove);
+
+  if (rafId) cancelAnimationFrame(rafId);
+  animate();
+}
+
+function render() {
+  if (state.page === "home") {
+    screen.innerHTML = renderHome();
+    attachHeroEffects();
+    return;
+  }
+
+  if (state.page === "catalog") {
+    screen.innerHTML = renderCatalog();
+    return;
+  }
+
+  if (state.page === "about") {
+    screen.innerHTML = renderAbout();
+    return;
+  }
+
+  screen.innerHTML = renderHome();
+  attachHeroEffects();
 }
 
 render();
 updateBack();
-updateMainButton();
-setActiveTab();
