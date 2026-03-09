@@ -415,3 +415,64 @@ a {
     height: 48px;
   }
 }
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+.screen {
+  min-height: auto;
+}
+
+.scroll-layout {
+  display: grid;
+  gap: 26px;
+}
+
+.page-section {
+  scroll-margin-top: 24px;
+}
+
+.page-section-narrow {
+  display: flex;
+  justify-content: center;
+}
+
+.scroll-centered {
+  width: 100%;
+}
+
+.section-head {
+  margin-bottom: 18px;
+}
+
+.section-title-md {
+  font-size: clamp(28px, 4vw, 40px);
+}
+
+.card-title {
+  margin: 16px 0 0;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.lead-wrap {
+  width: min(100%, 640px);
+}
+
+.lead-success {
+  margin-top: 14px;
+  color: var(--primary-strong);
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .scroll-layout {
+    gap: 18px;
+  }
+
+  .page-section {
+    scroll-margin-top: 16px;
+  }
+}

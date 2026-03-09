@@ -9,8 +9,6 @@ const btnBack = document.getElementById('btnBack');
 const tabs = Array.from(document.querySelectorAll('.tab[data-go]'));
 
 const state = {
-  page: 'home',
-  history: ['home'],
   quiz: {
     step: 0,
     answers: {}
@@ -40,36 +38,6 @@ const quizSteps = [
   }
 ];
 
-function go(page) {
-  if (state.page !== page) {
-    state.history.push(page);
-  }
-  state.page = page;
-  render();
-  updateBack();
-  updateTabs();
-}
-
-function back() {
-  if (state.history.length > 1) {
-    state.history.pop();
-    state.page = state.history[state.history.length - 1];
-    render();
-    updateBack();
-    updateTabs();
-  }
-}
-
-function updateBack() {
-  btnBack.style.visibility = state.history.length > 1 ? 'visible' : 'hidden';
-}
-
-function updateTabs() {
-  tabs.forEach((tab) => {
-    tab.classList.toggle('active', tab.dataset.go === state.page);
-  });
-}
-
 function getQuizResult() {
   const volume = state.quiz.answers.hiring_volume || '';
   const pain = state.quiz.answers.pain || '';
@@ -87,36 +55,40 @@ function getQuizResult() {
 
 function renderHome() {
   return `
-    <section class="hero" id="hero">
-      <div class="hero-orb orb-one"></div>
-      <div class="hero-orb orb-two"></div>
-      <div class="hero-content" data-parallax>
-        <div class="hero-badge">AI HR агентство КОМЭКСПО</div>
-        <h1 class="hero-title">Подбор AI-решений для найма и HR-процессов</h1>
-        <p class="hero-text">Быстрый мини-квиз, понятные пакеты и сценарии внедрения — в одном Telegram Mini App.</p>
-        <div class="hero-actions">
-          <button class="cta-btn shine" data-go="quiz" type="button">Начнем?</button>
-          <button class="ghost-btn shine-soft" data-go="packages" type="button">Смотреть пакеты</button>
+    <section class="page-section section-home" id="home" data-section="home">
+      <section class="hero" id="hero">
+        <div class="hero-orb orb-one"></div>
+        <div class="hero-orb orb-two"></div>
+        <div class="hero-content" data-parallax>
+          <div class="hero-badge">AI HR агентство КОМЭКСПО</div>
+          <h1 class="hero-title">Подбор AI-решений для найма и HR-процессов</h1>
+          <p class="hero-text">Быстрый мини-квиз, понятные пакеты и сценарии внедрения — в одном Telegram Mini App.</p>
+          <div class="hero-actions">
+            <button class="cta-btn shine" data-scroll="quiz" type="button">Начнем?</button>
+            <button class="ghost-btn shine-soft" data-scroll="packages" type="button">Смотреть пакеты</button>
+          </div>
         </div>
-      </div>
+      </section>
     </section>
   `;
 }
 
 function renderQuiz() {
   const step = quizSteps[state.quiz.step];
-  const progress = Math.round(((state.quiz.step) / quizSteps.length) * 100);
+  const progress = Math.round((state.quiz.step / quizSteps.length) * 100);
 
   if (!step) {
     return `
-      <section class="quiz-wrap centered-screen">
-        <div class="quiz-card card-soft result-card">
-          <span class="section-eyebrow">Подбор решения</span>
-          <h2 class="section-title">Результат готов</h2>
-          <p class="section-text">${getQuizResult()}</p>
-          <div class="stack-actions">
-            <button class="cta-btn shine" data-go="lead" type="button">Оставить заявку</button>
-            <button class="ghost-btn shine-soft" data-action="restart-quiz" type="button">Пройти заново</button>
+      <section class="page-section page-section-narrow section-quiz" id="quiz" data-section="quiz">
+        <div class="quiz-wrap centered-screen scroll-centered">
+          <div class="quiz-card card-soft result-card">
+            <span class="section-eyebrow">Подбор решения</span>
+            <h2 class="section-title">Результат готов</h2>
+            <p class="section-text">${getQuizResult()}</p>
+            <div class="stack-actions">
+              <button class="cta-btn shine" data-scroll="lead" type="button">Оставить заявку</button>
+              <button class="ghost-btn shine-soft" data-action="restart-quiz" type="button">Пройти заново</button>
+            </div>
           </div>
         </div>
       </section>
@@ -128,12 +100,14 @@ function renderQuiz() {
   `).join('');
 
   return `
-    <section class="quiz-wrap centered-screen">
-      <div class="quiz-card card-soft">
-        <div class="quiz-progress"><span style="width:${progress}%"></span></div>
-        <span class="section-eyebrow">Шаг ${state.quiz.step + 1} из ${quizSteps.length}</span>
-        <h2 class="section-title">${step.title}</h2>
-        <div class="answers-grid">${options}</div>
+    <section class="page-section page-section-narrow section-quiz" id="quiz" data-section="quiz">
+      <div class="quiz-wrap centered-screen scroll-centered">
+        <div class="quiz-card card-soft">
+          <div class="quiz-progress"><span style="width:${progress}%"></span></div>
+          <span class="section-eyebrow">Шаг ${state.quiz.step + 1} из ${quizSteps.length}</span>
+          <h2 class="section-title">${step.title}</h2>
+          <div class="answers-grid">${options}</div>
+        </div>
       </div>
     </section>
   `;
@@ -141,87 +115,101 @@ function renderQuiz() {
 
 function renderPackages() {
   return `
-    <section class="content-grid">
-      <article class="card-soft">
-        <span class="section-eyebrow">Пакет 01</span>
-        <h2 class="section-title">AI Audit</h2>
-        <p class="section-text">Диагностика найма, карта точек автоматизации и приоритеты внедрения.</p>
-      </article>
-      <article class="card-soft">
-        <span class="section-eyebrow">Пакет 02</span>
-        <h2 class="section-title">AI Recruiter</h2>
-        <p class="section-text">AI-скрипты, фильтрация кандидатов, ускорение отклика и маршрутизация лидов.</p>
-      </article>
-      <article class="card-soft">
-        <span class="section-eyebrow">Пакет 03</span>
-        <h2 class="section-title">HR AI System</h2>
-        <p class="section-text">Полная HR-воронка: аналитика, сценарии, автокоммуникации и интеграции.</p>
-      </article>
+    <section class="page-section" id="packages" data-section="packages">
+      <div class="section-head">
+        <span class="section-eyebrow">Пакеты</span>
+        <h2 class="section-title section-title-md">Готовые форматы внедрения</h2>
+      </div>
+      <section class="content-grid">
+        <article class="card-soft">
+          <span class="section-eyebrow">Пакет 01</span>
+          <h3 class="card-title">AI Audit</h3>
+          <p class="section-text">Диагностика найма, карта точек автоматизации и приоритеты внедрения.</p>
+        </article>
+        <article class="card-soft">
+          <span class="section-eyebrow">Пакет 02</span>
+          <h3 class="card-title">AI Recruiter</h3>
+          <p class="section-text">AI-скрипты, фильтрация кандидатов, ускорение отклика и маршрутизация лидов.</p>
+        </article>
+        <article class="card-soft">
+          <span class="section-eyebrow">Пакет 03</span>
+          <h3 class="card-title">HR AI System</h3>
+          <p class="section-text">Полная HR-воронка: аналитика, сценарии, автокоммуникации и интеграции.</p>
+        </article>
+      </section>
     </section>
   `;
 }
 
 function renderCases() {
   return `
-    <section class="content-grid cases-grid">
-      <article class="card-soft">
-        <span class="section-eyebrow">Кейс</span>
-        <h2 class="section-title">Сократили время найма на 37%</h2>
-        <p class="section-text">Автоматизировали первичный отбор и коммуникацию по входящим откликам.</p>
-      </article>
-      <article class="card-soft">
-        <span class="section-eyebrow">Кейс</span>
-        <h2 class="section-title">Упорядочили потоковый найм</h2>
-        <p class="section-text">Собрали единую AI-систему под линейный персонал и контроль конверсий.</p>
-      </article>
+    <section class="page-section" id="cases" data-section="cases">
+      <div class="section-head">
+        <span class="section-eyebrow">Кейсы</span>
+        <h2 class="section-title section-title-md">Что уже можно получить</h2>
+      </div>
+      <section class="content-grid cases-grid">
+        <article class="card-soft">
+          <span class="section-eyebrow">Кейс</span>
+          <h3 class="card-title">Сократили время найма на 37%</h3>
+          <p class="section-text">Автоматизировали первичный отбор и коммуникацию по входящим откликам.</p>
+        </article>
+        <article class="card-soft">
+          <span class="section-eyebrow">Кейс</span>
+          <h3 class="card-title">Упорядочили потоковый найм</h3>
+          <p class="section-text">Собрали единую AI-систему под линейный персонал и контроль конверсий.</p>
+        </article>
+      </section>
     </section>
   `;
 }
 
 function renderLead() {
   return `
-    <section class="lead-wrap centered-screen">
-      <form class="lead-card card-soft" id="leadForm">
-        <span class="section-eyebrow">Заявка</span>
-        <h2 class="section-title">Обсудим решение под ваш бизнес</h2>
-        <p class="section-text">Оставьте контакты, и мы свяжемся с вами по Telegram или телефону.</p>
+    <section class="page-section page-section-narrow" id="lead" data-section="lead">
+      <div class="lead-wrap scroll-centered">
+        <form class="lead-card card-soft" id="leadForm">
+          <span class="section-eyebrow">Заявка</span>
+          <h2 class="section-title section-title-md">Обсудим решение под ваш бизнес</h2>
+          <p class="section-text">Оставьте контакты, и мы свяжемся с вами по Telegram или телефону.</p>
 
-        <label class="field">
-          <span>Имя</span>
-          <input name="name" type="text" placeholder="Ваше имя" required />
-        </label>
+          <label class="field">
+            <span>Имя</span>
+            <input name="name" type="text" placeholder="Ваше имя" required />
+          </label>
 
-        <label class="field">
-          <span>Телефон</span>
-          <input name="phone" type="tel" placeholder="+7 (___) ___-__-__" required />
-        </label>
+          <label class="field">
+            <span>Телефон</span>
+            <input name="phone" type="tel" placeholder="+7 (___) ___-__-__" required />
+          </label>
 
-        <label class="field">
-          <span>Компания</span>
-          <input name="company" type="text" placeholder="Название компании" />
-        </label>
+          <label class="field">
+            <span>Компания</span>
+            <input name="company" type="text" placeholder="Название компании" />
+          </label>
 
-        <label class="field">
-          <span>Комментарий</span>
-          <textarea name="comment" rows="4" placeholder="Коротко опишите задачу"></textarea>
-        </label>
+          <label class="field">
+            <span>Комментарий</span>
+            <textarea name="comment" rows="4" placeholder="Коротко опишите задачу"></textarea>
+          </label>
 
-        <button class="cta-btn shine" type="submit">Отправить заявку</button>
-      </form>
+          <button class="cta-btn shine" type="submit">Отправить заявку</button>
+          <div id="leadSuccess" class="lead-success" hidden>Спасибо, заявка отправлена.</div>
+        </form>
+      </div>
     </section>
   `;
 }
 
-function renderThanks() {
-  return `
-    <section class="centered-screen">
-      <div class="card-soft result-card">
-        <span class="section-eyebrow">Готово</span>
-        <h2 class="section-title">Спасибо, заявка отправлена</h2>
-        <p class="section-text">Мы свяжемся с вами в ближайшее время и предложим оптимальный AI HR-сценарий.</p>
-        <button class="ghost-btn shine-soft" data-go="home" type="button">На главную</button>
-      </div>
-    </section>
+function renderPage() {
+  screen.innerHTML = `
+    <div class="scroll-layout">
+      ${renderHome()}
+      ${renderQuiz()}
+      ${renderPackages()}
+      ${renderCases()}
+      ${renderLead()}
+    </div>
   `;
 }
 
@@ -272,6 +260,39 @@ function attachHeroEffects() {
   };
 }
 
+function updateTabs(activeId) {
+  tabs.forEach((tab) => {
+    tab.classList.toggle('active', tab.dataset.go === activeId);
+  });
+}
+
+function scrollToSection(sectionId) {
+  const node = document.getElementById(sectionId);
+  if (!node) return;
+  node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateTabs(sectionId);
+}
+
+function observeSections() {
+  const sections = Array.from(document.querySelectorAll('[data-section]'));
+  if (!sections.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+    if (visible?.target?.id) {
+      updateTabs(visible.target.id);
+    }
+  }, {
+    threshold: [0.2, 0.45, 0.7],
+    rootMargin: '-12% 0px -45% 0px'
+  });
+
+  sections.forEach((section) => observer.observe(section));
+}
+
 async function submitLead(form) {
   const formData = new FormData(form);
   const payload = {
@@ -299,11 +320,10 @@ async function submitLead(form) {
     });
 
     if (!response.ok) throw new Error('request_failed');
-    state.page = 'thanks';
-    state.history.push('thanks');
-    render();
-    updateBack();
-    updateTabs();
+    const success = document.getElementById('leadSuccess');
+    form.reset();
+    if (success) success.hidden = false;
+    scrollToSection('lead');
   } catch (error) {
     alert('Не удалось отправить заявку. Попробуйте еще раз.');
   }
@@ -314,42 +334,27 @@ function cleanupDynamicEffects() {
   if (hero?.cleanupParallax) hero.cleanupParallax();
 }
 
-function render() {
-  cleanupDynamicEffects();
-
-  switch (state.page) {
-    case 'home':
-      screen.innerHTML = renderHome();
-      attachHeroEffects();
-      break;
-    case 'quiz':
-      screen.innerHTML = renderQuiz();
-      break;
-    case 'packages':
-      screen.innerHTML = renderPackages();
-      break;
-    case 'cases':
-      screen.innerHTML = renderCases();
-      break;
-    case 'lead':
-      screen.innerHTML = renderLead();
-      break;
-    case 'thanks':
-      screen.innerHTML = renderThanks();
-      break;
-    default:
-      state.page = 'home';
-      screen.innerHTML = renderHome();
-      attachHeroEffects();
+function rerenderQuizSection(scrollAfterRender = true) {
+  const nextQuiz = document.getElementById('quiz');
+  if (!nextQuiz) return;
+  nextQuiz.outerHTML = renderQuiz();
+  if (scrollAfterRender) {
+    requestAnimationFrame(() => scrollToSection('quiz'));
   }
 }
 
-btnBack?.addEventListener('click', back);
+btnBack?.setAttribute('hidden', 'hidden');
 
 document.addEventListener('click', (event) => {
   const navTarget = event.target.closest('[data-go]');
   if (navTarget) {
-    go(navTarget.dataset.go);
+    scrollToSection(navTarget.dataset.go);
+    return;
+  }
+
+  const scrollTarget = event.target.closest('[data-scroll]');
+  if (scrollTarget) {
+    scrollToSection(scrollTarget.dataset.scroll);
     return;
   }
 
@@ -358,7 +363,7 @@ document.addEventListener('click', (event) => {
     const step = quizSteps[state.quiz.step];
     state.quiz.answers[step.key] = answerBtn.dataset.answer;
     state.quiz.step += 1;
-    render();
+    rerenderQuizSection();
     return;
   }
 
@@ -366,7 +371,7 @@ document.addEventListener('click', (event) => {
   if (restartBtn) {
     state.quiz.step = 0;
     state.quiz.answers = {};
-    go('quiz');
+    rerenderQuizSection();
   }
 });
 
@@ -382,7 +387,9 @@ qualityBadge?.addEventListener('click', () => {
   window.open('https://getcourse.ru', '_blank', 'noopener,noreferrer');
 });
 
-render();
-updateBack();
-updateTabs();
-window.go = go;
+cleanupDynamicEffects();
+renderPage();
+attachHeroEffects();
+observeSections();
+updateTabs('home');
+window.go = scrollToSection;
