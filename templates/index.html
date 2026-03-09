@@ -1,81 +1,47 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>КОМЭКСПО • AI HR-агентство</title>
-  <meta name="theme-color" content="#eef2ff">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>КОМЭКСПО — AI HR-агентство</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
+  <div class="bg" aria-hidden="true"></div>
+
   <div class="app-shell">
-    <header class="topbar">
-      <button id="btnBack" class="icon-btn" type="button" aria-label="Назад">←</button>
-      <div class="topbar__brand">
-        <span class="topbar__eyebrow">Telegram Mini App</span>
-        <strong>КОМЭКСПО • AI HR-агентство</strong>
-      </div>
-      <button id="btnMenu" class="icon-btn" type="button" aria-label="Меню">☰</button>
-    </header>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">КОМЭКСПО</div>
+          <div class="sub">Telegram Mini App • AI HR-агентство</div>
+        </div>
 
-    <main id="screen" class="screen" aria-live="polite"></main>
+        <button id="btnBack" class="iconbtn" type="button" aria-label="Назад">←</button>
+      </header>
 
-    <nav class="bottom-nav" id="bottomNav">
-      <button class="nav-btn is-active" data-page="home" type="button">Главная</button>
-      <button class="nav-btn" data-page="quiz" type="button">Подбор</button>
-      <button class="nav-btn" data-page="services" type="button">Пакеты</button>
-      <button class="nav-btn" data-page="cases" type="button">Кейсы</button>
-      <button class="nav-btn nav-btn--accent" data-page="lead" type="button">Заявка</button>
-    </nav>
+      <main id="screen" class="screen" role="main"></main>
+
+      <nav class="tabs" aria-label="Навигация">
+        <button class="tab" data-go="home" type="button">Главная</button>
+        <button class="tab" data-go="quiz" type="button">Подбор</button>
+        <button class="tab" data-go="packages" type="button">Пакеты</button>
+        <button class="tab" data-go="cases" type="button">Кейсы</button>
+        <button class="tab primary" data-go="lead" type="button">Заявка</button>
+      </nav>
+
+      <footer class="contacts-bar">
+        <span>Telegram: <a href="https://t.me/komexpo" target="_blank" rel="noreferrer">@komexpo</a></span>
+        <span>+7 900 000-00-00</span>
+      </footer>
+    </div>
   </div>
 
-  <script>
-    window.APP_CONFIG = {
-      policyUrl: {{ policy_url|tojson }}
-    };
-  </script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="{{ url_for('static', filename='app.js') }}"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <title>КОМЭКСПО AI HR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <button class="quality-badge quality-badge-btn" id="qualityBadge" type="button" aria-label="Проверено GetCourse">
+    <img src="{{ url_for('static', filename='img/getcourse-badge.svg') }}" alt="Проверено GetCourse" />
+  </button>
 
-  <link rel="stylesheet" href="/static/styles.css">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-</head>
-
-<body>
-
-<div class="app">
-
-<header class="header">
-  <button id="btnBack">←</button>
-  <h1>AI HR агентство КОМЭКСПО</h1>
-</header>
-
-<main id="screen"></main>
-
-<footer class="contacts">
-  <div class="contact-item">
-    Telegram: <a href="https://t.me/komexpo">@komexpo</a>
-  </div>
-
-  <div class="contact-item">
-    +7 900 000-00-00
-  </div>
-</footer>
-
-</div>
-
-<script src="/static/app.js"></script>
-
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
