@@ -218,6 +218,7 @@ a {
   padding: 16px;
   border-radius: var(--radius-lg);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-align: left;
 }
 
 .info-card:hover {
@@ -377,6 +378,7 @@ a {
   gap: 8px;
   padding: 10px;
   border-radius: 22px;
+  z-index: 30;
 }
 
 .tab {
@@ -386,6 +388,11 @@ a {
   color: var(--text);
   font-size: 13px;
   font-weight: 700;
+}
+
+.tab.is-active {
+  background: rgba(79, 107, 255, 0.14);
+  color: var(--primary-strong);
 }
 
 .tab.primary {
@@ -406,6 +413,41 @@ a {
 
 .is-hidden {
   display: none !important;
+}
+
+.quality-badge {
+  position: fixed;
+  right: 10px;
+  bottom: 96px;
+  z-index: 60;
+  display: block;
+  width: 168px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px 0 0 14px;
+  overflow: hidden;
+  background: transparent;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.quality-badge img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.quality-badge:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+}
+
+.quality-badge:active {
+  transform: translateX(-2px) scale(0.99);
+}
+
+.quality-badge-btn {
+  cursor: pointer;
 }
 
 @media (max-width: 560px) {
@@ -445,5 +487,11 @@ a {
   .tab {
     font-size: 11px;
     padding: 0 6px;
+  }
+
+  .quality-badge {
+    width: 148px;
+    right: 8px;
+    bottom: 92px;
   }
 }

@@ -13,10 +13,6 @@ const state = {
   history: ["home"]
 };
 
-function qs(sel, root = document) {
-  return root.querySelector(sel);
-}
-
 function qsa(sel, root = document) {
   return Array.from(root.querySelectorAll(sel));
 }
@@ -44,13 +40,7 @@ function updateBack() {
 function updateMainButton() {
   if (!tg?.MainButton) return;
 
-  if (state.page === "packages") {
-    tg.MainButton.setText("Оставить заявку");
-    tg.MainButton.show();
-    return;
-  }
-
-  if (state.page === "home") {
+  if (state.page === "home" || state.page === "packages") {
     tg.MainButton.setText("Оставить заявку");
     tg.MainButton.show();
     return;
@@ -100,7 +90,7 @@ function scrollToSection(id) {
 function handleLeadAction() {
   if (state.page !== "home") {
     go("home");
-    setTimeout(() => scrollToSection("contact-form"), 120);
+    setTimeout(() => scrollToSection("contact-form"), 140);
     return;
   }
 
@@ -165,8 +155,8 @@ function renderHome() {
         </div>
 
         <div class="hero-cta">
-          <button class="btn btn-primary" data-lead>Оставить заявку</button>
-          <button class="btn btn-secondary" data-go="packages">Пакеты</button>
+          <button class="btn btn-primary" type="button" data-lead>Оставить заявку</button>
+          <button class="btn btn-secondary" type="button" data-go="packages">Пакеты</button>
         </div>
       </section>
 
@@ -332,6 +322,20 @@ if (tg?.MainButton) {
   tg.MainButton.setParams({
     is_visible: true,
     text: "Оставить заявку"
+  });
+}
+
+const qualityBadge = document.getElementById("qualityBadge");
+
+if (qualityBadge) {
+  qualityBadge.addEventListener("click", () => {
+    const url = "https://getcourse.ru/qualityreestr~1700002963a49da13542e0726b7bb758";
+
+    if (tg?.openLink) {
+      tg.openLink(url);
+    } else {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
   });
 }
 
