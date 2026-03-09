@@ -1,43 +1,108 @@
 <!doctype html>
+
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
   <title>КОМЭКСПО — AI HR-агентство</title>
 
   <!-- Telegram Mini Apps API -->
+
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 
 <body>
+
+  <!-- background gradient -->
+
   <div class="bg" aria-hidden="true"></div>
 
   <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">КОМЭКСПО</div>
-        <div class="sub">AI HR-агентство • найм и HR-автоматизация</div>
-      </div>
 
-      <button class="iconbtn" id="btnBack" type="button" aria-label="Назад">←</button>
-    </header>
+```
+<!-- HEADER -->
+<header class="topbar">
 
-    <main id="screen" class="screen" role="main"></main>
-
-    <nav class="tabs" aria-label="Навигация">
-      <button class="tab" data-go="home" type="button">Главная</button>
-      <button class="tab" data-go="packages" type="button">Пакеты</button>
-      <button class="tab" data-go="cases" type="button">Кейсы</button>
-      <button class="tab primary" data-go="lead" type="button">Заявка</button>
-    </nav>
-
-    <footer class="footer">
-      <div class="hint">© KomExpo • Mini App</div>
-    </footer>
+  <div class="brand">
+    <div class="logo">КОМЭКСПО</div>
+    <div class="sub">AI HR-агентство • найм и HR-автоматизация</div>
   </div>
 
+  <button
+    id="btnBack"
+    class="iconbtn"
+    type="button"
+    aria-label="Назад"
+  >
+    ←
+  </button>
+
+</header>
+
+<!-- MAIN APP SCREEN (SPA container) -->
+<main
+  id="screen"
+  class="screen"
+  role="main"
+></main>
+
+<!-- TAB NAVIGATION -->
+<nav
+  class="tabs"
+  aria-label="Навигация"
+>
+
+  <button
+    class="tab"
+    data-go="home"
+    type="button"
+  >
+    Главная
+  </button>
+
+  <button
+    class="tab"
+    data-go="packages"
+    type="button"
+  >
+    Пакеты
+  </button>
+
+  <button
+    class="tab"
+    data-go="cases"
+    type="button"
+  >
+    Кейсы
+  </button>
+
+  <button
+    class="tab primary"
+    data-scroll="contact-form"
+    type="button"
+  >
+    Заявка
+  </button>
+
+</nav>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="hint">
+    © KomExpo • Telegram Mini App
+  </div>
+</footer>
+```
+
+  </div>
+
+  <!-- APP SCRIPT -->
+
   <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+
 </body>
 </html>
