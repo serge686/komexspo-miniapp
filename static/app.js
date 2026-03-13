@@ -280,13 +280,26 @@ function updateActiveTab() {
 function bindQr() {
   if (!qrFab || !qrPopover || !qrClose) return;
 
-  const close = () => qrPopover.hidden = true;
-  const open = () => qrPopover.hidden = false;
+  const close = () => {
+    qrPopover.classList.remove("show");
+    setTimeout(() => {
+      qrPopover.hidden = true;
+    }, 200);
+  };
+
+  const open = () => {
+    qrPopover.hidden = false;
+    requestAnimationFrame(() => {
+      qrPopover.classList.add("show");
+    });
+  };
 
   qrFab.addEventListener("click", () => {
     if (qrPopover.hidden) open(); else close();
   });
+
   qrClose.addEventListener("click", close);
+
   document.addEventListener("click", (event) => {
     if (qrPopover.hidden) return;
     if (qrPopover.contains(event.target) || qrFab.contains(event.target)) return;

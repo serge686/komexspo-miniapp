@@ -301,16 +301,28 @@ a { color: inherit; }
 .qr-fab__label { font-size: 14px; font-weight: 800; letter-spacing: .04em; }
 .qr-popover {
   position: fixed;
-  right: 18px;
+  right: 22px;
   bottom: calc(162px + var(--safe-bottom));
   z-index: 31;
-  width: min(280px, calc(100vw - 36px));
+  width: min(280px, calc(100vw - 44px));
   padding: 18px;
   border-radius: 22px;
-  background: rgba(255,255,255,0.94);
-  border: 1px solid rgba(255,255,255,0.84);
-  box-shadow: 0 20px 42px rgba(44, 58, 110, 0.22);
+  background: rgba(255,255,255,0.68);
+  border: 1px solid rgba(255,255,255,0.46);
+  box-shadow: 0 12px 35px rgba(60, 76, 140, 0.18);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  transform: translateY(20px) scale(.95);
+  transition: opacity .28s ease, transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.qr-popover.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.qr-popover:hover {
+  box-shadow: 0 16px 40px rgba(60, 76, 140, 0.22), 0 0 0 1px rgba(255,255,255,0.55);
+  border-color: rgba(255,255,255,0.62);
 }
 .qr-popover__close {
   position: absolute;
