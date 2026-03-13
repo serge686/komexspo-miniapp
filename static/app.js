@@ -156,6 +156,28 @@ function bindQuiz() {
   renderQuizStep();
 }
 
+function renderQuizStepper() {
+  const total = quizSteps.length;
+  const current = Math.min(quizState.step + 1, total);
+
+  return `
+    <div class="quiz-stepper" aria-label="Прогресс мини-теста">
+      ${quizSteps.map((_, index) => {
+        const stepNum = index + 1;
+        const isDone = quizState.step > index;
+        const isActive = current === stepNum || (quizState.step >= total && stepNum === total);
+
+        return `
+          <div class="quiz-step ${isDone ? "is-done" : ""} ${isActive ? "is-active" : ""}">
+            <div class="quiz-step__dot">${isDone ? "✓" : stepNum}</div>
+            ${index < total - 1 ? `<div class="quiz-step__line"></div>` : ""}
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
 function renderQuizStep() {
   const wrap = document.getElementById("quizWrap");
   if (!wrap) return;
@@ -163,6 +185,8 @@ function renderQuizStep() {
   if (quizState.step >= quizSteps.length) {
     wrap.innerHTML = `
       <div class="quiz-card done">
+        ${renderQuizStepper()}
+        <button class="quiz-back" id="quizBack" type="button" aria-label="Вернуться на предыдущий шаг">Назад</button>
         <div class="quiz-progress">Готово</div>
         <h3>Рекомендуем начать с аудита и AI-воронки подбора</h3>
         <p>По вашим ответам подойдёт сценарий с быстрым внедрением автоматизации откликов и аналитики кандидатов.</p>
@@ -173,24 +197,36 @@ function renderQuizStep() {
       </div>
     `;
     bindScrollButtons();
-    return;
+  } else {
+    const step = quizSteps[quizState.step];
+    wrap.innerHTML = `
+      <div class="quiz-card">
+        ${renderQuizStepper()}
+        ${quizState.step > 0 ? `<button class="quiz-back" id="quizBack" type="button" aria-label="Вернуться на предыдущий шаг">Назад</button>` : ``}
+        <div class="quiz-progress">Шаг ${quizState.step + 1} из ${quizSteps.length}</div>
+        <h3>${step.title}</h3>
+        <div class="quiz-options">
+          ${step.options.map((option) => `
+            <button class="quiz-option" type="button" data-option="${option}">${option}</button>
+          `).join("")}
+        </div>
+      </div>
+    `;
   }
 
-  const step = quizSteps[quizState.step];
-  wrap.innerHTML = `
-    <div class="quiz-card">
-      <div class="quiz-progress">Шаг ${quizState.step + 1} из ${quizSteps.length}</div>
-      <h3>${step.title}</h3>
-      <div class="quiz-options">
-        ${step.options.map((option) => `
-          <button class="quiz-option" type="button" data-option="${option}">${option}</button>
-        `).join("")}
-      </div>
-    </div>
-  `;
+  const backBtn = document.getElementById("quizBack");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      if (quizState.step > 0) {
+        quizState.step -= 1;
+        renderQuizStep();
+      }
+    });
+  }
 
   wrap.querySelectorAll(".quiz-option").forEach((button) => {
     button.addEventListener("click", () => {
+      const step = quizSteps[quizState.step];
       quizState.answers[step.key] = button.dataset.option;
       quizState.step += 1;
       renderQuizStep();
