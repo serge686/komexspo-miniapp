@@ -446,3 +446,33 @@ a { color: inherit; }
     width: 22px;
   }
 }
+
+/* Центрирование блока заявки */
+
+#lead{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+#lead .section-head{
+  text-align:center;
+}
+
+.lead-card{
+  width:100%;
+  max-width:520px;
+
+  margin-top:24px;
+  padding:28px;
+
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+
+  border-radius:22px;
+  background:rgba(255,255,255,0.7);
+  backdrop-filter:blur(16px);
+
+  box-shadow:0 10px 30px rgba(60,76,140,0.12);
+}
