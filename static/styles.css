@@ -270,19 +270,63 @@ a { color: inherit; }
   color: var(--primary-strong);
 }
 .footer {
-  padding: 18px 10px 110px;
+  padding: 24px 10px 116px;
 }
 .contact-stack {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.44);
+  border: 1px solid rgba(255,255,255,0.42);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .contact-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: var(--muted);
   text-decoration: none;
+  line-height: 1.2;
+  transition: color .22s ease, transform .22s ease;
+}
+.contact-line::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(79,107,255,0.18), rgba(52,81,244,0.08));
+  box-shadow: inset 0 0 0 1px rgba(79,107,255,0.12);
+  flex: 0 0 18px;
+}
+.contact-line:first-child::before {
+  background:
+    radial-gradient(circle at 50% 35%, #fff 0 2px, transparent 2.2px),
+    linear-gradient(135deg, rgba(79,107,255,0.22), rgba(52,81,244,0.12));
+}
+.contact-line.phone::before {
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0 1.8px, transparent 2px),
+    linear-gradient(135deg, rgba(79,107,255,0.16), rgba(52,81,244,0.08));
+}
+.contact-line:hover {
+  color: var(--primary-strong);
+  transform: translateY(-1px);
+}
+.contact-stack::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(95,107,133,0.28), transparent);
+  order: 2;
 }
 .contact-line.phone {
-  padding-right: 76px;
+  padding-right: 0;
 }
 .qr-fab {
   position: fixed;
@@ -394,7 +438,11 @@ a { color: inherit; }
     padding: 11px 6px;
     font-size: 13px;
   }
-  .contact-line.phone {
-    padding-right: 68px;
+  .contact-stack {
+    gap: 8px;
+    padding: 12px 14px;
+  }
+  .contact-stack::before {
+    width: 22px;
   }
 }
