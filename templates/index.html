@@ -10,37 +10,43 @@
 <body>
   <div class="bg" aria-hidden="true"></div>
 
-  <div class="app-shell">
-    <div class="app">
-      <header class="topbar">
-        <div class="brand">
-          <div class="logo">КОМЭКСПО</div>
-          <div class="sub">Telegram Mini App • AI HR-агентство</div>
-        </div>
+  <div class="app shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">КОМЭКСПО</div>
+        <div class="sub">AI HR-агентство • найм и HR-автоматизация</div>
+      </div>
+    </header>
 
-        <button id="btnBack" class="iconbtn" type="button" aria-label="Назад">←</button>
-      </header>
+    <main id="screen" class="screen" role="main"></main>
 
-      <main id="screen" class="screen" role="main"></main>
+    <nav class="tabs" aria-label="Навигация">
+      <button class="tab is-active" data-scroll="hero" type="button">Главная</button>
+      <button class="tab" data-scroll="quiz" type="button">Подбор</button>
+      <button class="tab" data-scroll="packages" type="button">Пакеты</button>
+      <button class="tab" data-scroll="cases" type="button">Кейсы</button>
+      <button class="tab primary" data-scroll="lead" type="button">Заявка</button>
+    </nav>
 
-      <nav class="tabs" aria-label="Навигация">
-        <button class="tab" data-go="home" type="button">Главная</button>
-        <button class="tab" data-go="quiz" type="button">Подбор</button>
-        <button class="tab" data-go="packages" type="button">Пакеты</button>
-        <button class="tab" data-go="cases" type="button">Кейсы</button>
-        <button class="tab primary" data-go="lead" type="button">Заявка</button>
-      </nav>
-
-      <footer class="contacts-bar">
-        <span>Telegram: <a href="https://t.me/komexpo" target="_blank" rel="noreferrer">@komexpo</a></span>
-        <span>+7 900 000-00-00</span>
-      </footer>
-    </div>
+    <footer class="footer">
+      <div class="contact-stack">
+        <a class="contact-line" href="https://t.me/komexpo" target="_blank" rel="noreferrer">Telegram: @komexpo</a>
+        <a class="contact-line phone" href="tel:+79000000000">+7 900 000-00-00</a>
+      </div>
+    </footer>
   </div>
 
-  <button class="quality-badge quality-badge-btn" id="qualityBadge" type="button" aria-label="Проверено GetCourse">
-    <img src="{{ url_for('static', filename='img/getcourse-badge.svg') }}" alt="Проверено GetCourse" />
+  <button class="qr-fab" id="qrFab" type="button" aria-label="Открыть QR-код Telegram">
+    <span class="qr-fab__label">QR</span>
   </button>
+
+  <div class="qr-popover" id="qrPopover" hidden>
+    <button class="qr-popover__close" id="qrClose" type="button" aria-label="Закрыть">×</button>
+    <div class="qr-popover__title">Связаться в Telegram</div>
+    <a class="qr-popover__link" href="https://t.me/komexpo" target="_blank" rel="noreferrer">@komexpo</a>
+    <img class="qr-popover__image" src="{{ url_for('static', filename='img/komexpo-qr.png') }}" alt="QR-код Telegram KomExpo" />
+    <div class="qr-popover__hint">Наведите камеру или нажмите на ссылку</div>
+  </div>
 
   <script defer src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
