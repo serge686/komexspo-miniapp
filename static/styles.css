@@ -458,3 +458,66 @@ a { color: inherit; }
 .qr-fab:hover{
   right:0 !important;
 }
+
+/* ===== Симметричные контакты (лево / право) ===== */
+
+.contact-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  width:min(100%, 340px);
+  margin-inline:auto;
+}
+
+.contact-line{
+  display:grid;
+  grid-template-columns: auto 1fr;
+  align-items:center;
+  width:100%;
+  padding:14px 18px;
+  border-radius:20px;
+  text-decoration:none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.62), rgba(245,248,255,.42)),
+    linear-gradient(135deg, rgba(117,138,255,.08), rgba(255,255,255,0));
+  border:1px solid rgba(255,255,255,.72);
+  box-shadow:
+    0 12px 28px rgba(49,80,230,.10),
+    inset 0 1px 0 rgba(255,255,255,.88);
+  backdrop-filter:blur(14px);
+}
+
+/* левая часть */
+.contact-line__label{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#6d7ba7;
+}
+
+/* правая часть */
+.contact-line__value{
+  font-size:17px;
+  font-weight:800;
+  color:#3451f4;
+  text-align:right;
+  justify-self:end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* адаптив */
+@media (max-width: 768px){
+  .contact-stack{
+    width:min(100%, 300px);
+  }
+
+  .contact-line{
+    padding:12px 14px;
+  }
+
+  .contact-line__value{
+    font-size:15px;
+  }
+}
