@@ -437,33 +437,34 @@ a { color: inherit; }
   font-variant-numeric: tabular-nums;
 }
 
-/* QR button */
+/* QR button — minimal */
 .qr-fab {
   position: fixed;
   right: 10px;
-  bottom: calc(84px + var(--safe-bottom));
+  bottom: calc(80px + var(--safe-bottom));
   z-index: 32;
 
-  width: 50px;
-  height: 28px;
+  width: 42px;
+  height: 42px;
   padding: 0;
 
-  border: 1px solid rgba(255,255,255,.34);
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgba(110,141,255,.94), rgba(41,70,215,.94));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255,255,255,.30);
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(110,141,255,.96), rgba(41,70,215,.96));
   color: #fff;
 
   box-shadow:
-    0 10px 20px rgba(79,107,255,.20),
-    inset 0 1px 0 rgba(255,255,255,.18);
+    0 10px 22px rgba(33,54,164,.28),
+    inset 0 1px 0 rgba(255,255,255,.25);
 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
 
   transition:
@@ -473,43 +474,37 @@ a { color: inherit; }
 }
 
 .qr-fab::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    110deg,
-    transparent 24%,
-    rgba(255,255,255,.32) 48%,
-    transparent 74%
-  );
-  transform: translateX(-160%);
-  transition: transform .85s ease;
+  content: "⌁";
+  position: static;
+  inset: auto;
+  background: none;
+  transform: none;
+  transition: none;
   pointer-events: none;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .qr-fab:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.05);
   box-shadow:
-    0 14px 24px rgba(79,107,255,.26),
-    inset 0 1px 0 rgba(255,255,255,.24);
+    0 14px 28px rgba(33,54,164,.34),
+    inset 0 1px 0 rgba(255,255,255,.30);
 }
 
 .qr-fab:hover::before {
-  transform: translateX(150%);
+  transform: none;
 }
 
 .qr-fab:active {
-  transform: scale(.97);
+  transform: scale(.95);
 }
 
 .qr-fab__label {
-  position: relative;
-  z-index: 1;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .08em;
-  line-height: 1;
-  text-transform: uppercase;
+  font-size: 0;
+  line-height: 0;
+  letter-spacing: 0;
 }
 
 /* QR popover */
@@ -672,14 +667,13 @@ a { color: inherit; }
 
   .qr-fab {
     right: 8px;
-    bottom: calc(82px + var(--safe-bottom));
-    width: 46px;
-    height: 26px;
+    bottom: calc(78px + var(--safe-bottom));
+    width: 38px;
+    height: 38px;
   }
 
-  .qr-fab__label {
-    font-size: 8px;
-    letter-spacing: .06em;
+  .qr-fab::before {
+    font-size: 16px;
   }
 
   .qr-popover {
