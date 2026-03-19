@@ -232,6 +232,7 @@ function bindLeadForm() {
 function bindHeroParallax() {
   const hero = document.getElementById("heroCard");
   if (!hero) return;
+  if (window.matchMedia("(pointer: coarse)").matches) return;
 
   let rafId = null;
   let tx = 0;
@@ -262,35 +263,71 @@ function bindHeroParallax() {
 }
 
 function updateActiveTab() {
-  const sections = ["hero", "quiz", "packages", "cases", "lead"].map((id) => document.getElementById(id));
+  const sections = ["hero", "quiz", "packages", "cases", "lead"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
   const observer = new IntersectionObserver((entries) => {
     const visible = entries
       .filter((entry) => entry.isIntersecting)
       .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
     if (!visible) return;
+
     tabs.forEach((tab) => {
       tab.classList.toggle("is-active", tab.dataset.scroll === visible.target.id);
     });
   }, { threshold: 0.35 });
 
-  sections.forEach((section) => section && observer.observe(section));
+  sections.forEach((section) => observer.observe(section));
 }
 
 function bindQr() {
   if (!qrFab || !qrPopover || !qrClose) return;
 
-  const close = () => qrPopover.hidden = true;
-  const open = () => qrPopover.hidden = false;
+  const open = () => {
+    qrPopover.hidden = false;
+    qrFab.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  };
 
-  qrFab.addEventListener("click", () => {
-    if (qrPopover.hidden) open(); else close();
+  const close = () => {
+    qrPopover.hidden = true;
+    qrFab.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  };
+
+  qrFab.setAttribute("aria-expanded", "false");
+  qrFab.setAttribute("aria-controls", "qrPopover");
+
+  qrFab.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (qrPopover.hidden) {
+      open();
+    } else {
+      close();
+    }
   });
-  qrClose.addEventListener("click", close);
+
+  qrClose.addEventListener("click", (event) => {
+    event.stopPropagation();
+    close();
+  });
+
+  qrPopover.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
   document.addEventListener("click", (event) => {
     if (qrPopover.hidden) return;
     if (qrPopover.contains(event.target) || qrFab.contains(event.target)) return;
     close();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !qrPopover.hidden) {
+      close();
+    }
   });
 }
 
