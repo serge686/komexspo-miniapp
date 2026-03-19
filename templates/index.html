@@ -20,32 +20,41 @@
 
     <main id="screen" class="screen" role="main"></main>
 
-    <nav class="tabs" aria-label="Навигация">
-      <button class="tab is-active" data-scroll="hero" type="button">Главная</button>
-      <button class="tab" data-scroll="quiz" type="button">Подбор</button>
-      <button class="tab" data-scroll="packages" type="button">Пакеты</button>
-      <button class="tab" data-scroll="cases" type="button">Кейсы</button>
-      <button class="tab primary" data-scroll="lead" type="button">Заявка</button>
+    <nav class="tabs">
+      <button class="tab is-active" data-scroll="hero">Главная</button>
+      <button class="tab" data-scroll="quiz">Подбор</button>
+      <button class="tab" data-scroll="packages">Пакеты</button>
+      <button class="tab" data-scroll="cases">Кейсы</button>
+      <button class="tab primary" data-scroll="lead">Заявка</button>
     </nav>
 
     <footer class="footer">
       <div class="contact-stack">
-        <a class="contact-line" href="https://t.me/komexpo" target="_blank" rel="noreferrer">Telegram: @komexpo</a>
-        <a class="contact-line phone" href="tel:+79000000000">+7 900 000-00-00</a>
+        <a class="contact-line" href="https://komexspo.ru/" target="_blank">Сайт: komexspo.ru</a>
+        <a class="contact-line phone" href="tel:+79301225589">+7 930 122-55-89</a>
       </div>
     </footer>
   </div>
 
-  <button class="qr-fab" id="qrFab" type="button" aria-label="Открыть QR-код Telegram">
+  <button class="qr-fab" id="qrFab" type="button" aria-label="Открыть QR-код сайта">
     <span class="qr-fab__label">QR</span>
   </button>
 
   <div class="qr-popover" id="qrPopover" hidden>
-    <button class="qr-popover__close" id="qrClose" type="button" aria-label="Закрыть">×</button>
-    <div class="qr-popover__title">Связаться в Telegram</div>
-    <a class="qr-popover__link" href="https://t.me/komexpo" target="_blank" rel="noreferrer">@komexpo</a>
-    <img class="qr-popover__image" src="{{ url_for('static', filename='img/komexpo-qr.png') }}" alt="QR-код Telegram KomExpo" />
-    <div class="qr-popover__hint">Наведите камеру или нажмите на ссылку</div>
+    <button class="qr-popover__close" id="qrClose">×</button>
+    <div class="qr-popover__title">Открыть сайт KomExspo</div>
+
+    <a class="qr-popover__link" href="https://komexspo.ru/" target="_blank">
+      komexspo.ru
+    </a>
+
+    <img class="qr-popover__image"
+         src="{{ url_for('static', filename='img/komexspo-qr.png') }}"
+         alt="QR-код сайта KomExspo" />
+
+    <div class="qr-popover__hint">
+      Наведите камеру или нажмите
+    </div>
   </div>
 
   <script defer src="{{ url_for('static', filename='app.js') }}"></script>
