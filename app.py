@@ -294,3 +294,30 @@ def api_lead():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "8000")), debug=True)
+
+from io import BytesIO
+
+import qrcode
+from flask import send_file
+
+
+@app.route("/qr/komexspo.png")
+def qr_komexspo():
+    url = "https://komexspo.ru/"
+
+    qr = qrcode.QRCode(
+        version=None,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+
+    return send_file(buf, mimetype="image/png", download_name="komexspo-qr.png")
