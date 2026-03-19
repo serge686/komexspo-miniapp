@@ -6,6 +6,269 @@
   <title>КОМЭКСПО — AI HR-агентство</title>
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+
+  <style>
+    .contact-stack{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      width:min(100%, 340px);
+      margin-inline:auto;
+    }
+
+    .contact-line{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      width:100%;
+      min-height:58px;
+      padding:14px 18px;
+      border-radius:20px;
+      text-decoration:none;
+      color:#3150e6;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.66), rgba(245,248,255,.45)),
+        linear-gradient(135deg, rgba(117,138,255,.08), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.72);
+      box-shadow:
+        0 12px 28px rgba(49,80,230,.10),
+        inset 0 1px 0 rgba(255,255,255,.88);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+    }
+
+    .contact-line span:first-child{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#6d7ba7;
+      white-space:nowrap;
+    }
+
+    .contact-line span:last-child{
+      margin-left:auto;
+      font-size:17px;
+      font-weight:800;
+      color:#3451f4;
+      text-align:right;
+      white-space:nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .qr-fab{
+      position:fixed;
+      right:-88px;
+      bottom:106px;
+      z-index:40;
+      width:168px;
+      height:34px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px;
+      padding:0 14px 0 18px;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:18px 0 0 18px;
+      background:linear-gradient(135deg, #6e8dff 0%, #4968fb 45%, #2946d7 100%);
+      box-shadow:
+        0 14px 34px rgba(33,54,164,.28),
+        inset 0 1px 0 rgba(255,255,255,.26),
+        inset 0 -1px 0 rgba(13,27,110,.22);
+      color:#f5f7ff;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      cursor:pointer;
+      overflow:hidden;
+      transition:right .28s ease, transform .22s ease, box-shadow .22s ease, opacity .22s ease;
+      opacity:.97;
+    }
+
+    .qr-fab::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(108deg, transparent 18%, rgba(255,255,255,.58) 41%, rgba(255,255,255,.10) 54%, transparent 73%);
+      transform:translateX(-145%);
+      transition:transform .9s ease;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .qr-fab::after{
+      content:"↗";
+      position:relative;
+      z-index:1;
+      margin-left:auto;
+      font-size:15px;
+      line-height:1;
+      color:#edf2ff;
+      opacity:.95;
+    }
+
+    .qr-fab:hover,
+    .qr-fab:focus-visible,
+    .qr-fab.is-open{
+      right:0;
+      transform:translateY(-1px);
+      box-shadow:
+        0 18px 40px rgba(33,54,164,.34),
+        inset 0 1px 0 rgba(255,255,255,.34),
+        inset 0 -1px 0 rgba(13,27,110,.28);
+    }
+
+    .qr-fab:hover::before,
+    .qr-fab:focus-visible::before,
+    .qr-fab.is-open::before{
+      transform:translateX(145%);
+    }
+
+    .qr-fab__label{
+      position:relative;
+      z-index:1;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.18em;
+      color:#f4f7ff;
+      text-transform:uppercase;
+      white-space:nowrap;
+      text-shadow:0 1px 0 rgba(15,28,111,.24);
+    }
+
+    .qr-fab__label::before{
+      content:"сайт";
+      font-size:10px;
+      letter-spacing:.12em;
+      opacity:.84;
+    }
+
+    .qr-popover{
+      position:fixed;
+      right:18px;
+      bottom:150px;
+      z-index:45;
+      width:min(248px, calc(100vw - 32px));
+      padding:14px 14px 12px;
+      border:1px solid rgba(255,255,255,.72);
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,.97), rgba(240,244,255,.93));
+      box-shadow:
+        0 22px 54px rgba(51,70,140,.24),
+        inset 0 1px 0 rgba(255,255,255,.82);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      transform-origin:right bottom;
+      animation:qrPopoverIn .22s ease;
+    }
+
+    @keyframes qrPopoverIn{
+      from{opacity:0; transform:translateY(8px) scale(.96);}
+      to{opacity:1; transform:translateY(0) scale(1);}
+    }
+
+    .qr-popover__close{
+      position:absolute;
+      top:8px;
+      right:8px;
+      width:30px;
+      height:30px;
+      border:0;
+      border-radius:999px;
+      background:rgba(57,84,242,.08);
+      color:#2b42ba;
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+    }
+
+    .qr-popover__title{
+      margin-bottom:6px;
+      padding-right:28px;
+      font-size:15px;
+      font-weight:800;
+      color:#16224a;
+      text-align:center;
+    }
+
+    .qr-popover__link{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      margin-bottom:12px;
+      color:#3551ef;
+      font-weight:700;
+      text-decoration:none;
+      text-align:center;
+    }
+
+    .qr-popover__link::before{
+      content:"🌐";
+      font-size:14px;
+    }
+
+    .qr-popover__image-wrap{
+      width:100%;
+      max-width:172px;
+      margin:0 auto 10px;
+      padding:10px;
+      border-radius:22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,1), rgba(245,247,255,.96));
+      box-shadow:
+        0 14px 30px rgba(40,60,180,.16),
+        inset 0 1px 0 rgba(255,255,255,.9);
+    }
+
+    .qr-popover__image{
+      display:block;
+      width:100%;
+      border-radius:14px;
+      background:#fff;
+    }
+
+    .qr-popover__hint{
+      text-align:center;
+      font-size:12px;
+      line-height:1.35;
+      color:#637197;
+    }
+
+    @media (max-width: 768px){
+      .contact-stack{ width:min(100%, 300px); }
+
+      .contact-line{
+        min-height:56px;
+        padding:12px 14px;
+        border-radius:18px;
+      }
+
+      .contact-line span:first-child{ font-size:11px; }
+      .contact-line span:last-child{ font-size:15px; }
+
+      .qr-fab{
+        right:-82px;
+        bottom:92px;
+        width:156px;
+        height:32px;
+        border-radius:16px 0 0 16px;
+        padding:0 12px 0 16px;
+      }
+
+      .qr-fab__label{ font-size:10px; }
+
+      .qr-popover{
+        right:12px;
+        bottom:136px;
+        width:min(224px, calc(100vw - 24px));
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="bg" aria-hidden="true"></div>
@@ -21,17 +284,24 @@
     <main id="screen" class="screen" role="main"></main>
 
     <nav class="tabs">
-      <button class="tab is-active" data-scroll="hero">Главная</button>
-      <button class="tab" data-scroll="quiz">Подбор</button>
-      <button class="tab" data-scroll="packages">Пакеты</button>
-      <button class="tab" data-scroll="cases">Кейсы</button>
-      <button class="tab primary" data-scroll="lead">Заявка</button>
+      <button class="tab is-active" data-scroll="hero" type="button">Главная</button>
+      <button class="tab" data-scroll="quiz" type="button">Подбор</button>
+      <button class="tab" data-scroll="packages" type="button">Пакеты</button>
+      <button class="tab" data-scroll="cases" type="button">Кейсы</button>
+      <button class="tab primary" data-scroll="lead" type="button">Заявка</button>
     </nav>
 
     <footer class="footer">
       <div class="contact-stack">
-        <a class="contact-line" href="https://komexspo.ru/" target="_blank">Сайт: komexspo.ru</a>
-        <a class="contact-line phone" href="tel:+79301225589">+7 930 122-55-89</a>
+        <a class="contact-line" href="https://komexspo.ru/" target="_blank" rel="noreferrer">
+          <span>Сайт</span>
+          <span>komexspo.ru</span>
+        </a>
+
+        <a class="contact-line phone" href="tel:+79301225589">
+          <span>Телефон</span>
+          <span>+7 930 122-55-89</span>
+        </a>
       </div>
     </footer>
   </div>
@@ -41,22 +311,77 @@
   </button>
 
   <div class="qr-popover" id="qrPopover" hidden>
-    <button class="qr-popover__close" id="qrClose">×</button>
+    <button class="qr-popover__close" id="qrClose" type="button" aria-label="Закрыть">×</button>
     <div class="qr-popover__title">Открыть сайт KomExspo</div>
 
-    <a class="qr-popover__link" href="https://komexspo.ru/" target="_blank">
+    <a class="qr-popover__link" href="https://komexspo.ru/" target="_blank" rel="noreferrer">
       komexspo.ru
     </a>
 
-    <img class="qr-popover__image"
-         src="{{ url_for('static', filename='img/komexspo-qr.png') }}"
-         alt="QR-код сайта KomExspo" />
+    <div class="qr-popover__image-wrap">
+      <img
+        class="qr-popover__image"
+        src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fkomexspo.ru%2F"
+        alt="QR-код сайта KomExspo"
+      />
+    </div>
 
     <div class="qr-popover__hint">
-      Наведите камеру или нажмите
+      Наведите камеру или нажмите на ссылку
     </div>
   </div>
 
   <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+
+  <script>
+    (function () {
+      const qrFab = document.getElementById('qrFab');
+      const qrPopover = document.getElementById('qrPopover');
+      const qrClose = document.getElementById('qrClose');
+
+      if (!qrFab || !qrPopover) return;
+
+      function openQr() {
+        qrPopover.hidden = false;
+        qrFab.classList.add('is-open');
+      }
+
+      function closeQr() {
+        qrPopover.hidden = true;
+        qrFab.classList.remove('is-open');
+      }
+
+      qrFab.addEventListener('mouseenter', openQr);
+      qrFab.addEventListener('focus', openQr);
+
+      qrFab.addEventListener('click', function () {
+        if (qrPopover.hidden) openQr();
+        else closeQr();
+      });
+
+      qrPopover.addEventListener('mouseenter', openQr);
+      qrPopover.addEventListener('mouseleave', closeQr);
+
+      qrFab.addEventListener('mouseleave', function () {
+        setTimeout(function () {
+          if (!qrPopover.matches(':hover')) closeQr();
+        }, 80);
+      });
+
+      if (qrClose) {
+        qrClose.addEventListener('click', closeQr);
+      }
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeQr();
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!qrPopover.hidden && !qrPopover.contains(event.target) && !qrFab.contains(event.target)) {
+          closeQr();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
