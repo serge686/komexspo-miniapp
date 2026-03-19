@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg-0: #eef2ff;
   --bg-1: #dfe7ff;
   --surface: rgba(255, 255, 255, 0.64);
@@ -440,25 +440,38 @@ a { color: inherit; }
 /* QR button */
 .qr-fab {
   position: fixed;
-  right: -42px;
-  bottom: calc(96px + var(--safe-bottom));
+  right: 16px;
+  bottom: calc(92px + var(--safe-bottom));
   z-index: 32;
-  width: 72px;
-  height: 34px;
-  border: 0;
-  border-radius: 18px 0 0 18px;
-  background: linear-gradient(135deg, #6e8dff, #2946d7);
+
+  min-width: 74px;
+  height: 36px;
+  padding: 0 14px;
+
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(110,141,255,.96), rgba(41,70,215,.96)),
+    linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,0));
   color: #fff;
+
   box-shadow:
-    0 18px 34px rgba(79,107,255,0.34),
-    inset 0 1px 0 rgba(255,255,255,.25);
+    0 14px 28px rgba(79,107,255,.24),
+    inset 0 1px 0 rgba(255,255,255,.26);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 12px;
-  transition: right .28s ease, transform .18s ease;
+  justify-content: center;
   overflow: hidden;
+
+  transition:
+    transform .18s ease,
+    box-shadow .22s ease,
+    opacity .22s ease;
 }
 
 .qr-fab::before {
@@ -467,89 +480,132 @@ a { color: inherit; }
   inset: 0;
   background: linear-gradient(
     110deg,
-    transparent 20%,
-    rgba(255,255,255,.55) 45%,
-    transparent 70%
+    transparent 18%,
+    rgba(255,255,255,.48) 45%,
+    transparent 72%
   );
   transform: translateX(-140%);
-  transition: transform .8s ease;
+  transition: transform .85s ease;
   pointer-events: none;
 }
 
 .qr-fab:hover {
-  right: 0;
   transform: translateY(-1px);
+  box-shadow:
+    0 18px 34px rgba(79,107,255,.30),
+    inset 0 1px 0 rgba(255,255,255,.30);
 }
 
 .qr-fab:hover::before {
   transform: translateX(140%);
 }
 
-.qr-fab__label {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .06em;
-  line-height: 1;
+.qr-fab:active {
+  transform: scale(.98);
 }
 
-.qr-fab__label::before {
-  content: none;
+.qr-fab__label {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 /* QR popover */
 .qr-popover {
   position: fixed;
-  right: 18px;
-  bottom: calc(162px + var(--safe-bottom));
+  right: 16px;
+  bottom: calc(140px + var(--safe-bottom));
   z-index: 31;
-  width: min(280px, calc(100vw - 36px));
-  padding: 18px;
-  border-radius: 22px;
-  background: rgba(255,255,255,0.94);
-  border: 1px solid rgba(255,255,255,0.84);
-  box-shadow: 0 20px 42px rgba(44, 58, 110, 0.22);
-  backdrop-filter: blur(16px);
+
+  width: min(272px, calc(100vw - 32px));
+  padding: 18px 16px 14px;
+
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.94), rgba(245,248,255,.90));
+  border: 1px solid rgba(255,255,255,.82);
+
+  box-shadow:
+    0 20px 42px rgba(44, 58, 110, 0.18),
+    inset 0 1px 0 rgba(255,255,255,.72);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  text-align: center;
 }
 
 .qr-popover__close {
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 32px;
-  height: 32px;
+
+  width: 30px;
+  height: 30px;
   border: 0;
   border-radius: 999px;
-  background: rgba(79,107,255,0.08);
+
+  background: rgba(79,107,255,.10);
   color: var(--primary-strong);
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform .18s ease, background .18s ease;
+}
+
+.qr-popover__close:hover {
+  transform: rotate(90deg);
+  background: rgba(79,107,255,.16);
 }
 
 .qr-popover__title {
-  font-size: 16px;
+  margin: 0 28px 4px;
+  font-size: 15px;
+  line-height: 1.35;
   font-weight: 800;
+  color: #24345c;
 }
 
 .qr-popover__link {
   display: inline-block;
-  margin-top: 6px;
+  margin-top: 4px;
   color: var(--primary-strong);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .qr-popover__image {
   display: block;
-  width: 180px;
-  height: 180px;
-  margin: 16px auto 12px;
-  border-radius: 18px;
-  background: #fff;
+  width: 188px;
+  height: 188px;
+  margin: 14px auto 10px;
+  padding: 10px;
+
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff, #f7f9ff);
+  border: 1px solid rgba(224,230,255,.95);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.86),
+    0 8px 18px rgba(80,104,185,.08);
+
+  object-fit: contain;
 }
 
 .qr-popover__hint {
+  margin: 0;
   text-align: center;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .reveal {
@@ -617,19 +673,28 @@ a { color: inherit; }
   }
 
   .qr-fab {
-    width: 64px;
-    right: -38px;
-    bottom: calc(92px + var(--safe-bottom));
-    padding-left: 10px;
+    right: 14px;
+    bottom: calc(88px + var(--safe-bottom));
+    min-width: 68px;
+    height: 34px;
+    padding: 0 12px;
   }
 
   .qr-fab__label {
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: .1em;
+  }
+
+  .qr-popover {
+    right: 14px;
+    bottom: calc(134px + var(--safe-bottom));
+    width: min(260px, calc(100vw - 28px));
+    padding: 16px 14px 13px;
+    border-radius: 22px;
+  }
+
+  .qr-popover__image {
+    width: 176px;
+    height: 176px;
   }
 }
-'''
-
-from pathlib import Path
-path = Path("/mnt/data/styles.css")
-path.write_text(css, encoding="utf-8")
-print(path)
