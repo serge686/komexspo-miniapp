@@ -6,6 +6,245 @@
   <title>КОМЭКСПО — AI HR-агентство</title>
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+
+  <style>
+    .contact-stack{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+
+    .contact-line{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-width:220px;
+      justify-content:center;
+      padding:10px 16px;
+      border-radius:16px;
+      text-decoration:none;
+      color:#3150e6;
+      background:rgba(255,255,255,.48);
+      border:1px solid rgba(255,255,255,.58);
+      box-shadow:0 10px 26px rgba(49,80,230,.08);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .contact-line:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.64);
+      box-shadow:0 14px 28px rgba(49,80,230,.12);
+    }
+
+    .contact-line__label{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#6c7aa5;
+    }
+
+    .contact-line__value{
+      font-size:18px;
+      font-weight:800;
+      color:#3451f4;
+    }
+
+    .qr-fab{
+      position:fixed;
+      right:-58px;
+      bottom:110px;
+      z-index:40;
+      width:108px;
+      height:48px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px;
+      padding:0 14px 0 16px;
+      border:1px solid rgba(255,255,255,.68);
+      border-radius:18px 0 0 18px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.95), rgba(232,239,255,.9)),
+        linear-gradient(90deg, rgba(79,107,255,.22), rgba(255,255,255,.04));
+      box-shadow:
+        0 14px 34px rgba(51,70,140,.18),
+        inset 0 1px 0 rgba(255,255,255,.85);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      cursor:pointer;
+      overflow:hidden;
+      transition:right .28s ease, transform .22s ease, box-shadow .22s ease, opacity .22s ease;
+      opacity:.94;
+    }
+
+    .qr-fab::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 20%, rgba(255,255,255,.72) 48%, transparent 76%);
+      transform:translateX(-145%);
+      transition:transform .8s ease;
+      pointer-events:none;
+    }
+
+    .qr-fab::after{
+      content:"↗";
+      position:relative;
+      z-index:1;
+      margin-left:auto;
+      font-size:18px;
+      line-height:1;
+      color:#3551ef;
+      opacity:.86;
+    }
+
+    .qr-fab:hover,
+    .qr-fab:focus-visible,
+    .qr-fab.is-open{
+      right:0;
+      transform:translateY(-1px);
+      box-shadow:
+        0 18px 40px rgba(51,70,140,.24),
+        inset 0 1px 0 rgba(255,255,255,.9);
+      opacity:1;
+    }
+
+    .qr-fab:hover::before,
+    .qr-fab:focus-visible::before,
+    .qr-fab.is-open::before{
+      transform:translateX(145%);
+    }
+
+    .qr-fab:focus-visible{
+      outline:2px solid rgba(79,107,255,.38);
+      outline-offset:3px;
+    }
+
+    .qr-fab__label{
+      position:relative;
+      z-index:1;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.16em;
+      color:#2c4ae8;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .qr-popover{
+      position:fixed;
+      right:18px;
+      bottom:168px;
+      z-index:45;
+      width:min(240px, calc(100vw - 32px));
+      padding:14px 14px 12px;
+      border:1px solid rgba(255,255,255,.72);
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(240,244,255,.92));
+      box-shadow:0 22px 54px rgba(51,70,140,.24), inset 0 1px 0 rgba(255,255,255,.82);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      transform-origin:right bottom;
+      animation:qrPopoverIn .22s ease;
+    }
+
+    @keyframes qrPopoverIn{
+      from{opacity:0; transform:translateY(8px) scale(.96);}
+      to{opacity:1; transform:translateY(0) scale(1);}
+    }
+
+    .qr-popover__close{
+      position:absolute;
+      top:8px;
+      right:8px;
+      width:30px;
+      height:30px;
+      border:0;
+      border-radius:999px;
+      background:rgba(57,84,242,.08);
+      color:#2b42ba;
+      font-size:20px;
+      line-height:1;
+      cursor:pointer;
+      transition:transform .18s ease, background .18s ease;
+    }
+
+    .qr-popover__close:hover{
+      transform:rotate(90deg);
+      background:rgba(57,84,242,.14);
+    }
+
+    .qr-popover__title{
+      margin-bottom:6px;
+      padding-right:28px;
+      font-size:15px;
+      font-weight:800;
+      color:#16224a;
+    }
+
+    .qr-popover__link{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      margin-bottom:12px;
+      color:#3551ef;
+      font-weight:700;
+      text-decoration:none;
+      word-break:break-word;
+    }
+
+    .qr-popover__link::before{
+      content:"🌐";
+      font-size:14px;
+    }
+
+    .qr-popover__image{
+      display:block;
+      width:100%;
+      max-width:156px;
+      margin:0 auto 10px;
+      border-radius:18px;
+      box-shadow:0 12px 24px rgba(39,59,145,.14);
+      background:#fff;
+    }
+
+    .qr-popover__hint{
+      text-align:center;
+      font-size:12px;
+      line-height:1.35;
+      color:#637197;
+    }
+
+    @media (max-width: 768px){
+      .contact-line{
+        min-width:0;
+        width:min(100%, 260px);
+      }
+
+      .contact-line__value{
+        font-size:16px;
+      }
+
+      .qr-fab{
+        right:-52px;
+        bottom:92px;
+        width:102px;
+        height:44px;
+        border-radius:16px 0 0 16px;
+      }
+
+      .qr-popover{
+        right:12px;
+        bottom:144px;
+        width:min(220px, calc(100vw - 24px));
+      }
+    }
+  </style>
+
 </head>
 <body>
   <div class="bg" aria-hidden="true"></div>
@@ -30,24 +269,82 @@
 
     <footer class="footer">
       <div class="contact-stack">
-        <a class="contact-line" href="https://t.me/komexpo" target="_blank" rel="noreferrer">Telegram: @komexpo</a>
-        <a class="contact-line phone" href="tel:+79000000000">+7 900 000-00-00</a>
+        <a class="contact-line site" href="https://komexspo.ru/" target="_blank" rel="noreferrer" aria-label="Открыть сайт KomExspo">
+          <span class="contact-line__label">Сайт</span>
+          <span class="contact-line__value">komexspo.ru</span>
+        </a>
+        <a class="contact-line phone" href="tel:+79301225589" aria-label="Позвонить в KomExspo">
+          <span class="contact-line__label">Телефон</span>
+          <span class="contact-line__value">+7 930 122-55-89</span>
+        </a>
       </div>
     </footer>
   </div>
 
-  <button class="qr-fab" id="qrFab" type="button" aria-label="Открыть QR-код Telegram">
+  <button class="qr-fab" id="qrFab" type="button" aria-label="Открыть QR-код сайта">
     <span class="qr-fab__label">QR</span>
   </button>
 
   <div class="qr-popover" id="qrPopover" hidden>
     <button class="qr-popover__close" id="qrClose" type="button" aria-label="Закрыть">×</button>
-    <div class="qr-popover__title">Связаться в Telegram</div>
-    <a class="qr-popover__link" href="https://t.me/komexpo" target="_blank" rel="noreferrer">@komexpo</a>
-    <img class="qr-popover__image" src="{{ url_for('static', filename='img/komexpo-qr.png') }}" alt="QR-код Telegram KomExpo" />
-    <div class="qr-popover__hint">Наведите камеру или нажмите на ссылку</div>
+    <div class="qr-popover__title">Открыть сайт KomExspo</div>
+    <a class="qr-popover__link" href="https://komexspo.ru/" target="_blank" rel="noreferrer">komexspo.ru</a>
+    <img class="qr-popover__image" src="{{ url_for('static', filename='img/komexpo-qr.png') }}" alt="QR-код сайта KomExspo" />
+    <div class="qr-popover__hint">Наведите камеру или нажмите, чтобы открыть сайт</div>
   </div>
 
   <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+
+  <script>
+    (function () {
+      const qrFab = document.getElementById('qrFab');
+      const qrPopover = document.getElementById('qrPopover');
+      const qrClose = document.getElementById('qrClose');
+
+      if (!qrFab || !qrPopover) return;
+
+      function openQr() {
+        qrPopover.hidden = false;
+        qrFab.classList.add('is-open');
+      }
+
+      function closeQr() {
+        qrPopover.hidden = true;
+        qrFab.classList.remove('is-open');
+      }
+
+      qrFab.addEventListener('mouseenter', openQr);
+      qrFab.addEventListener('focus', openQr);
+
+      qrFab.addEventListener('click', function () {
+        if (qrPopover.hidden) openQr();
+        else closeQr();
+      });
+
+      qrPopover.addEventListener('mouseenter', openQr);
+      qrPopover.addEventListener('mouseleave', closeQr);
+
+      qrFab.addEventListener('mouseleave', function () {
+        setTimeout(function () {
+          if (!qrPopover.matches(':hover')) closeQr();
+        }, 80);
+      });
+
+      if (qrClose) {
+        qrClose.addEventListener('click', closeQr);
+      }
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeQr();
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!qrPopover.hidden && !qrPopover.contains(event.target) && !qrFab.contains(event.target)) {
+          closeQr();
+        }
+      });
+    })();
+  </script>
+
 </body>
 </html>
