@@ -386,3 +386,75 @@ a { color: inherit; }
     padding-right: 68px;
   }
 }
+
+
+/* ===== Premium centered contacts ===== */
+.footer { padding: 18px 10px 120px; }
+
+.contact-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  width:min(100%, 320px);
+  margin-inline:auto;
+}
+
+.contact-line{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:62px;
+  padding:12px 18px;
+  border-radius:20px;
+  text-decoration:none;
+  text-align:center;
+  color:#3150e6;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.62), rgba(245,248,255,.42)),
+    linear-gradient(135deg, rgba(117,138,255,.08), rgba(255,255,255,0));
+  border:1px solid rgba(255,255,255,.72);
+  box-shadow:
+    0 12px 28px rgba(49,80,230,.10),
+    inset 0 1px 0 rgba(255,255,255,.88);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  overflow:hidden;
+}
+
+.contact-line__label{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#6d7ba7;
+  margin-bottom:6px;
+}
+
+.contact-line__value{
+  font-size:18px;
+  font-weight:800;
+  color:#3451f4;
+  text-align:center;
+  font-variant-numeric: tabular-nums;
+}
+
+.contact-line.phone .contact-line__value{
+  font-size:17px;
+}
+
+/* ===== Premium slim QR ===== */
+.qr-fab{
+  right:-90px !important;
+  width:170px !important;
+  height:34px !important;
+  border-radius:18px 0 0 18px !important;
+  background: linear-gradient(135deg, #6e8dff, #2946d7) !important;
+}
+
+.qr-fab:hover{
+  right:0 !important;
+}
