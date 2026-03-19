@@ -7,107 +7,141 @@
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 
-
-
-
   <style>
     .contact-stack{
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:10px;
+      gap:12px;
       width:min(100%, 320px);
       margin-inline:auto;
     }
 
     .contact-line{
-      display:grid;
-      grid-template-columns:auto minmax(0,1fr);
+      position:relative;
+      display:flex;
+      flex-direction:column;
       align-items:center;
-      column-gap:12px;
+      justify-content:center;
       width:100%;
-      padding:10px 14px;
-      border-radius:18px;
+      min-height:62px;
+      padding:12px 18px;
+      border-radius:20px;
       text-decoration:none;
+      text-align:center;
       color:#3150e6;
-      background:rgba(255,255,255,.44);
-      border:1px solid rgba(255,255,255,.58);
-      box-shadow:0 10px 26px rgba(49,80,230,.08);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.62), rgba(245,248,255,.42)),
+        linear-gradient(135deg, rgba(117,138,255,.08), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.72);
+      box-shadow:
+        0 12px 28px rgba(49,80,230,.10),
+        inset 0 1px 0 rgba(255,255,255,.88);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
       box-sizing:border-box;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .contact-line::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg, transparent 15%, rgba(255,255,255,.42) 48%, transparent 78%);
+      transform:translateX(-140%);
+      transition:transform .8s ease;
+      pointer-events:none;
+      z-index:0;
     }
 
     .contact-line:hover{
       transform:translateY(-1px);
-      background:rgba(255,255,255,.58);
-      box-shadow:0 14px 28px rgba(49,80,230,.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.74), rgba(245,248,255,.52)),
+        linear-gradient(135deg, rgba(117,138,255,.10), rgba(255,255,255,0));
+      box-shadow:
+        0 16px 32px rgba(49,80,230,.14),
+        inset 0 1px 0 rgba(255,255,255,.92);
+    }
+
+    .contact-line:hover::before{
+      transform:translateX(140%);
+    }
+
+    .contact-line__label,
+    .contact-line__value{
+      position:relative;
+      z-index:1;
     }
 
     .contact-line__label{
       font-size:12px;
       font-weight:800;
-      letter-spacing:.08em;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      color:#6c7aa5;
-      white-space:nowrap;
+      color:#6d7ba7;
+      line-height:1.1;
+      margin-bottom:6px;
     }
 
     .contact-line__value{
-      font-size:17px;
-      line-height:1.15;
+      font-size:18px;
+      line-height:1.18;
       font-weight:800;
       color:#3451f4;
-      min-width:0;
-      justify-self:end;
-      text-align:right;
+      text-align:center;
       word-break:break-word;
       overflow-wrap:anywhere;
+      max-width:100%;
     }
 
     .contact-line.phone .contact-line__value{
-      font-size:15px;
+      font-size:17px;
       letter-spacing:.01em;
+    }
+
+    .contact-line.site .contact-line__value{
+      font-size:17px;
     }
 
     .qr-fab{
       position:fixed;
-      right:-78px;
-      bottom:108px;
+      right:-94px;
+      bottom:106px;
       z-index:40;
-      width:146px;
-      height:38px;
+      width:172px;
+      height:34px;
       display:inline-flex;
       align-items:center;
       justify-content:flex-start;
       gap:10px;
       padding:0 14px 0 18px;
-      border:1px solid rgba(255,255,255,.28);
+      border:1px solid rgba(255,255,255,.22);
       border-radius:18px 0 0 18px;
       background:
-        linear-gradient(135deg, rgba(104,131,255,.98), rgba(51,81,244,.98) 55%, rgba(32,58,201,.98)),
-        linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+        linear-gradient(135deg, #6e8dff 0%, #4968fb 45%, #2946d7 100%);
       box-shadow:
-        0 14px 34px rgba(40,64,180,.28),
-        inset 0 1px 0 rgba(255,255,255,.35),
-        inset 0 -1px 0 rgba(10,22,106,.24);
+        0 14px 34px rgba(33,54,164,.28),
+        inset 0 1px 0 rgba(255,255,255,.26),
+        inset 0 -1px 0 rgba(13,27,110,.22);
+      color:#f5f7ff;
       backdrop-filter:blur(10px);
       -webkit-backdrop-filter:blur(10px);
       cursor:pointer;
       overflow:hidden;
       transition:right .28s ease, transform .22s ease, box-shadow .22s ease, opacity .22s ease;
-      opacity:.96;
+      opacity:.97;
     }
 
     .qr-fab::before{
       content:"";
       position:absolute;
       inset:0;
-      background:
-        linear-gradient(108deg, transparent 18%, rgba(255,255,255,.58) 42%, rgba(255,255,255,.12) 54%, transparent 72%);
+      background:linear-gradient(108deg, transparent 18%, rgba(255,255,255,.58) 41%, rgba(255,255,255,.10) 54%, transparent 73%);
       transform:translateX(-145%);
-      transition:transform .85s ease;
+      transition:transform .9s ease;
       pointer-events:none;
       mix-blend-mode:screen;
     }
@@ -117,9 +151,9 @@
       position:relative;
       z-index:1;
       margin-left:auto;
-      font-size:16px;
+      font-size:15px;
       line-height:1;
-      color:#eef2ff;
+      color:#edf2ff;
       opacity:.95;
     }
 
@@ -129,10 +163,9 @@
       right:0;
       transform:translateY(-1px);
       box-shadow:
-        0 18px 40px rgba(40,64,180,.34),
-        inset 0 1px 0 rgba(255,255,255,.42),
-        inset 0 -1px 0 rgba(10,22,106,.28);
-      opacity:1;
+        0 18px 40px rgba(33,54,164,.34),
+        inset 0 1px 0 rgba(255,255,255,.34),
+        inset 0 -1px 0 rgba(13,27,110,.28);
     }
 
     .qr-fab:hover::before,
@@ -142,26 +175,36 @@
     }
 
     .qr-fab:focus-visible{
-      outline:2px solid rgba(79,107,255,.38);
+      outline:2px solid rgba(112,136,255,.38);
       outline-offset:3px;
     }
 
     .qr-fab__label{
       position:relative;
       z-index:1;
-      font-size:12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
       font-weight:800;
       letter-spacing:.18em;
       color:#f4f7ff;
       text-transform:uppercase;
       white-space:nowrap;
-      text-shadow:0 1px 0 rgba(15,28,111,.2);
+      text-shadow:0 1px 0 rgba(15,28,111,.24);
+    }
+
+    .qr-fab__label::before{
+      content:"сайт";
+      font-size:10px;
+      letter-spacing:.12em;
+      opacity:.84;
     }
 
     .qr-popover{
       position:fixed;
       right:18px;
-      bottom:156px;
+      bottom:150px;
       z-index:45;
       width:min(240px, calc(100vw - 32px));
       padding:14px 14px 12px;
@@ -207,17 +250,20 @@
       font-size:15px;
       font-weight:800;
       color:#16224a;
+      text-align:center;
     }
 
     .qr-popover__link{
-      display:inline-flex;
+      display:flex;
       align-items:center;
+      justify-content:center;
       gap:6px;
       margin-bottom:12px;
       color:#3551ef;
       font-weight:700;
       text-decoration:none;
       word-break:break-word;
+      text-align:center;
     }
 
     .qr-popover__link::before{
@@ -244,48 +290,49 @@
 
     @media (max-width: 768px){
       .contact-stack{
-        width:min(100%, 280px);
+        width:min(100%, 282px);
       }
 
       .contact-line{
-        padding:10px 12px;
-        column-gap:10px;
+        min-height:58px;
+        padding:11px 14px;
+        border-radius:18px;
       }
 
       .contact-line__label{
         font-size:11px;
+        margin-bottom:5px;
       }
 
       .contact-line__value{
+        font-size:16px;
+      }
+
+      .contact-line.phone .contact-line__value,
+      .contact-line.site .contact-line__value{
         font-size:15px;
       }
 
-      .contact-line.phone .contact-line__value{
-        font-size:12px;
-        letter-spacing:0;
-      }
-
       .qr-fab{
-        right:-74px;
+        right:-86px;
         bottom:92px;
-        width:138px;
-        height:34px;
+        width:160px;
+        height:32px;
         border-radius:16px 0 0 16px;
         padding:0 12px 0 16px;
       }
 
       .qr-fab__label{
-        font-size:11px;
+        font-size:10px;
       }
 
       .qr-popover{
         right:12px;
-        bottom:138px;
+        bottom:136px;
         width:min(220px, calc(100vw - 24px));
       }
     }
   </style>
-
 </head>
 <body>
   <div class="bg" aria-hidden="true"></div>
@@ -309,17 +356,17 @@
     </nav>
 
     <footer class="footer">
-     <div class="contact-stack">
-  <a class="contact-line site" href="https://komexspo.ru/" target="_blank">
-    <span class="contact-line__label">Сайт</span>
-    <span class="contact-line__value">komexspo.ru</span>
-  </a>
+      <div class="contact-stack">
+        <a class="contact-line site" href="https://komexspo.ru/" target="_blank" rel="noreferrer">
+          <span class="contact-line__label">Сайт</span>
+          <span class="contact-line__value">komexspo.ru</span>
+        </a>
 
-  <a class="contact-line phone" href="tel:+79301225589">
-    <span class="contact-line__label">Телефон</span>
-    <span class="contact-line__value">+7 930 122-55-89</span>
-  </a>
-</div>
+        <a class="contact-line phone" href="tel:+79301225589">
+          <span class="contact-line__label">Телефон</span>
+          <span class="contact-line__value">+7 930 122-55-89</span>
+        </a>
+      </div>
     </footer>
   </div>
 
@@ -387,46 +434,5 @@
       });
     })();
   </script>
-
 </body>
 </html>
-
-<style>
-.contact-line__value {
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  text-align: right;
-}
-
-.contact-line.phone .contact-line__value {
-  font-size: 14px;
-}
-
-/* QR кнопка */
-.qr-fab {
-  position: fixed;
-  right: -70px;
-  bottom: 100px;
-  width: 140px;
-  height: 34px;
-  border-radius: 18px 0 0 18px;
-  background: linear-gradient(135deg, #4f6bff, #2f4be0);
-  color: white;
-  display: flex;
-  align-items: center;
-  padding-left: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-.qr-fab:hover {
-  right: 0;
-}
-
-.qr-fab::after {
-  content: "↗";
-  margin-left: auto;
-  margin-right: 12px;
-}
-</style>
