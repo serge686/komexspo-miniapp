@@ -309,16 +309,17 @@
     </nav>
 
     <footer class="footer">
-      <div class="contact-stack">
-        <a class="contact-line site" href="https://komexspo.ru/" target="_blank" rel="noreferrer" aria-label="Открыть сайт KomExspo">
-          <span class="contact-line__label">Сайт</span>
-          <span class="contact-line__value">komexspo.ru</span>
-        </a>
-        <a class="contact-line phone" href="tel:+79301225589" aria-label="Позвонить в KomExspo">
-          <span class="contact-line__label">Телефон</span>
-          <span class="contact-line__value">+7 930 122-55-89</span>
-        </a>
-      </div>
+     <div class="contact-stack">
+  <a class="contact-line site" href="https://komexspo.ru/" target="_blank">
+    <span class="contact-line__label">Сайт</span>
+    <span class="contact-line__value">komexspo.ru</span>
+  </a>
+
+  <a class="contact-line phone" href="tel:+79301225589">
+    <span class="contact-line__label">Телефон</span>
+    <span class="contact-line__value">+7 930 122-55-89</span>
+  </a>
+</div>
     </footer>
   </div>
 
@@ -389,3 +390,43 @@
 
 </body>
 </html>
+
+<style>
+.contact-line__value {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.contact-line.phone .contact-line__value {
+  font-size: 14px;
+}
+
+/* QR кнопка */
+.qr-fab {
+  position: fixed;
+  right: -70px;
+  bottom: 100px;
+  width: 140px;
+  height: 34px;
+  border-radius: 18px 0 0 18px;
+  background: linear-gradient(135deg, #4f6bff, #2f4be0);
+  color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.qr-fab:hover {
+  right: 0;
+}
+
+.qr-fab::after {
+  content: "↗";
+  margin-left: auto;
+  margin-right: 12px;
+}
+</style>
