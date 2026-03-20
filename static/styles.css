@@ -442,11 +442,11 @@ a { color: inherit; }
 .qr-fab {
   position: fixed;
   right: 12px;
-  bottom: calc(72px + var(--safe-bottom));
+  bottom: calc(58px + var(--safe-bottom));
   z-index: 40;
-  width: 92px;
-  height: 32px;
-  padding: 0 14px;
+  width: 82px;
+  height: 30px;
+  padding: 0 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -455,7 +455,7 @@ a { color: inherit; }
   background: linear-gradient(135deg, #6e8dff 0%, #4968fb 45%, #2946d7 100%);
   color: #f5f7ff;
   box-shadow:
-    0 12px 28px rgba(33,54,164,.24),
+    0 10px 22px rgba(33,54,164,.22),
     inset 0 1px 0 rgba(255,255,255,.26),
     inset 0 -1px 0 rgba(13,27,110,.18);
   backdrop-filter: blur(10px);
@@ -488,7 +488,7 @@ a { color: inherit; }
 .qr-fab.is-open {
   transform: translateY(-1px);
   box-shadow:
-    0 16px 34px rgba(33,54,164,.30),
+    0 14px 28px rgba(33,54,164,.28),
     inset 0 1px 0 rgba(255,255,255,.34),
     inset 0 -1px 0 rgba(13,27,110,.24);
 }
@@ -509,9 +509,9 @@ a { color: inherit; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: .12em;
+  letter-spacing: .1em;
   color: #f4f7ff;
   text-transform: uppercase;
   white-space: nowrap;
@@ -522,7 +522,7 @@ a { color: inherit; }
 .qr-popover {
   position: fixed;
   right: 18px;
-  bottom: calc(122px + var(--safe-bottom));
+  bottom: calc(104px + var(--safe-bottom));
   z-index: 45;
   width: min(248px, calc(100vw - 32px));
   padding: 14px 14px 12px;
@@ -678,21 +678,21 @@ a { color: inherit; }
 
   .qr-fab {
     right: 10px;
-    bottom: calc(74px + var(--safe-bottom));
-    width: 88px;
-    height: 30px;
-    padding: 0 12px;
+    bottom: calc(46px + var(--safe-bottom));
+    width: 72px;
+    height: 28px;
+    padding: 0 10px;
     border-radius: 999px;
   }
 
   .qr-fab__label {
-    font-size: 10px;
-    letter-spacing: .1em;
+    font-size: 9px;
+    letter-spacing: .08em;
   }
 
   .qr-popover {
     right: 12px;
-    bottom: calc(124px + var(--safe-bottom));
+    bottom: calc(92px + var(--safe-bottom));
     width: min(224px, calc(100vw - 24px));
   }
 }
