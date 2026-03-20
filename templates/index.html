@@ -72,6 +72,15 @@
 
   <script>
     (function () {
+      const isMiniApp = !!(window.Telegram && window.Telegram.WebApp);
+      if (isMiniApp) {
+        document.body.classList.add('is-miniapp');
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
       const qrFab = document.getElementById('qrFab');
       const qrPopover = document.getElementById('qrPopover');
       const qrClose = document.getElementById('qrClose');

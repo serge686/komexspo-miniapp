@@ -441,16 +441,13 @@ a { color: inherit; }
 /* QR button */
 .qr-fab {
   position: fixed;
-  left: 50%;
-  bottom: calc(66px + var(--safe-bottom));
-  transform: translateX(112px);
   z-index: 40;
-  width: 74px;
-  height: 30px;
-  padding: 0 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 74px;
+  height: 30px;
+  padding: 0 12px;
   border: 1px solid rgba(255,255,255,.30);
   border-radius: 999px;
   background: linear-gradient(135deg, #7e95ff 0%, #5470ff 45%, #3553ea 100%);
@@ -465,6 +462,20 @@ a { color: inherit; }
   overflow: hidden;
   transition: transform .22s ease, box-shadow .22s ease, opacity .22s ease;
   opacity: .98;
+}
+
+/* сайт */
+body:not(.is-miniapp) .qr-fab {
+  right: 14px;
+  bottom: calc(92px + var(--safe-bottom));
+}
+
+/* mini app */
+body.is-miniapp .qr-fab {
+  left: 50%;
+  right: auto;
+  bottom: calc(52px + var(--safe-bottom));
+  transform: translateX(6px);
 }
 
 .qr-fab::before {
@@ -484,10 +495,20 @@ a { color: inherit; }
   mix-blend-mode: screen;
 }
 
-.qr-fab:hover,
-.qr-fab:focus-visible,
-.qr-fab.is-open {
-  transform: translateX(112px) translateY(-1px);
+body:not(.is-miniapp) .qr-fab:hover,
+body:not(.is-miniapp) .qr-fab:focus-visible,
+body:not(.is-miniapp) .qr-fab.is-open {
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 30px rgba(53,83,234,.28),
+    inset 0 1px 0 rgba(255,255,255,.40),
+    inset 0 -1px 0 rgba(18,35,120,.22);
+}
+
+body.is-miniapp .qr-fab:hover,
+body.is-miniapp .qr-fab:focus-visible,
+body.is-miniapp .qr-fab.is-open {
+  transform: translateX(6px) translateY(-1px);
   box-shadow:
     0 14px 30px rgba(53,83,234,.28),
     inset 0 1px 0 rgba(255,255,255,.40),
@@ -500,8 +521,12 @@ a { color: inherit; }
   transform: translateX(145%);
 }
 
-.qr-fab:active {
-  transform: translateX(112px) scale(.98);
+body:not(.is-miniapp) .qr-fab:active {
+  transform: scale(.98);
+}
+
+body.is-miniapp .qr-fab:active {
+  transform: translateX(6px) scale(.98);
 }
 
 .qr-fab__label {
@@ -522,10 +547,6 @@ a { color: inherit; }
 /* QR popover */
 .qr-popover {
   position: fixed;
-  left: 50%;
-  right: auto;
-  bottom: calc(106px + var(--safe-bottom));
-  transform: translateX(56px);
   z-index: 45;
   width: min(248px, calc(100vw - 32px));
   padding: 14px 14px 12px;
@@ -537,14 +558,27 @@ a { color: inherit; }
     inset 0 1px 0 rgba(255,255,255,.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  transform-origin: right bottom;
-  animation: qrPopoverIn .22s ease;
   text-align: center;
+  animation: qrPopoverIn .22s ease;
+}
+
+body:not(.is-miniapp) .qr-popover {
+  right: 18px;
+  bottom: calc(140px + var(--safe-bottom));
+  transform-origin: right bottom;
+}
+
+body.is-miniapp .qr-popover {
+  left: 50%;
+  right: auto;
+  bottom: calc(96px + var(--safe-bottom));
+  transform: translateX(-50%);
+  transform-origin: center bottom;
 }
 
 @keyframes qrPopoverIn {
-  from { opacity: 0; transform: translateX(56px) translateY(8px) scale(.96); }
-  to { opacity: 1; transform: translateX(56px) translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(8px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .qr-popover__close {
@@ -680,24 +714,32 @@ a { color: inherit; }
   }
 
   .qr-fab {
-    left: 50%;
-    right: auto;
-    bottom: calc(58px + var(--safe-bottom));
-    transform: translateX(92px);
     width: 68px;
     height: 28px;
     padding: 0 10px;
     border-radius: 999px;
   }
 
-  .qr-fab:hover,
-  .qr-fab:focus-visible,
-  .qr-fab.is-open {
-    transform: translateX(92px) translateY(-1px);
+  body:not(.is-miniapp) .qr-fab {
+    right: 12px;
+    bottom: calc(84px + var(--safe-bottom));
   }
 
-  .qr-fab:active {
-    transform: translateX(92px) scale(.98);
+  body.is-miniapp .qr-fab {
+    left: 50%;
+    right: auto;
+    bottom: calc(54px + var(--safe-bottom));
+    transform: translateX(4px);
+  }
+
+  body.is-miniapp .qr-fab:hover,
+  body.is-miniapp .qr-fab:focus-visible,
+  body.is-miniapp .qr-fab.is-open {
+    transform: translateX(4px) translateY(-1px);
+  }
+
+  body.is-miniapp .qr-fab:active {
+    transform: translateX(4px) scale(.98);
   }
 
   .qr-fab__label {
@@ -705,16 +747,17 @@ a { color: inherit; }
     letter-spacing: .06em;
   }
 
-  .qr-popover {
-    left: 50%;
-    right: auto;
-    bottom: calc(98px + var(--safe-bottom));
-    transform: translateX(18px);
+  body:not(.is-miniapp) .qr-popover {
+    right: 12px;
+    bottom: calc(128px + var(--safe-bottom));
     width: min(224px, calc(100vw - 24px));
   }
 
-  @keyframes qrPopoverIn {
-    from { opacity: 0; transform: translateX(18px) translateY(8px) scale(.96); }
-    to { opacity: 1; transform: translateX(18px) translateY(0) scale(1); }
+  body.is-miniapp .qr-popover {
+    left: 50%;
+    right: auto;
+    bottom: calc(98px + var(--safe-bottom));
+    width: min(224px, calc(100vw - 24px));
+    transform: translateX(-50%);
   }
 }
