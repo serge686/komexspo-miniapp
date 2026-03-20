@@ -441,29 +441,30 @@ a { color: inherit; }
 /* QR button */
 .qr-fab {
   position: fixed;
-  right: 12px;
-  bottom: calc(58px + var(--safe-bottom));
+  left: 50%;
+  bottom: calc(66px + var(--safe-bottom));
+  transform: translateX(112px);
   z-index: 40;
-  width: 82px;
+  width: 74px;
   height: 30px;
   padding: 0 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255,255,255,.28);
+  border: 1px solid rgba(255,255,255,.30);
   border-radius: 999px;
-  background: linear-gradient(135deg, #6e8dff 0%, #4968fb 45%, #2946d7 100%);
+  background: linear-gradient(135deg, #7e95ff 0%, #5470ff 45%, #3553ea 100%);
   color: #f5f7ff;
   box-shadow:
-    0 10px 22px rgba(33,54,164,.22),
-    inset 0 1px 0 rgba(255,255,255,.26),
-    inset 0 -1px 0 rgba(13,27,110,.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+    0 10px 24px rgba(53,83,234,.24),
+    inset 0 1px 0 rgba(255,255,255,.34),
+    inset 0 -1px 0 rgba(18,35,120,.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   cursor: pointer;
   overflow: hidden;
   transition: transform .22s ease, box-shadow .22s ease, opacity .22s ease;
-  opacity: .97;
+  opacity: .98;
 }
 
 .qr-fab::before {
@@ -486,11 +487,11 @@ a { color: inherit; }
 .qr-fab:hover,
 .qr-fab:focus-visible,
 .qr-fab.is-open {
-  transform: translateY(-1px);
+  transform: translateX(112px) translateY(-1px);
   box-shadow:
-    0 14px 28px rgba(33,54,164,.28),
-    inset 0 1px 0 rgba(255,255,255,.34),
-    inset 0 -1px 0 rgba(13,27,110,.24);
+    0 14px 30px rgba(53,83,234,.28),
+    inset 0 1px 0 rgba(255,255,255,.40),
+    inset 0 -1px 0 rgba(18,35,120,.22);
 }
 
 .qr-fab:hover::before,
@@ -500,7 +501,7 @@ a { color: inherit; }
 }
 
 .qr-fab:active {
-  transform: scale(.98);
+  transform: translateX(112px) scale(.98);
 }
 
 .qr-fab__label {
@@ -509,20 +510,22 @@ a { color: inherit; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: .1em;
+  letter-spacing: .08em;
   color: #f4f7ff;
   text-transform: uppercase;
   white-space: nowrap;
-  text-shadow: 0 1px 0 rgba(15,28,111,.24);
+  text-shadow: 0 1px 0 rgba(15,28,111,.20);
 }
 
 /* QR popover */
 .qr-popover {
   position: fixed;
-  right: 18px;
-  bottom: calc(104px + var(--safe-bottom));
+  left: 50%;
+  right: auto;
+  bottom: calc(106px + var(--safe-bottom));
+  transform: translateX(56px);
   z-index: 45;
   width: min(248px, calc(100vw - 32px));
   padding: 14px 14px 12px;
@@ -540,8 +543,8 @@ a { color: inherit; }
 }
 
 @keyframes qrPopoverIn {
-  from { opacity: 0; transform: translateY(8px) scale(.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateX(56px) translateY(8px) scale(.96); }
+  to { opacity: 1; transform: translateX(56px) translateY(0) scale(1); }
 }
 
 .qr-popover__close {
@@ -677,22 +680,41 @@ a { color: inherit; }
   }
 
   .qr-fab {
-    right: 10px;
-    bottom: calc(46px + var(--safe-bottom));
-    width: 72px;
+    left: 50%;
+    right: auto;
+    bottom: calc(58px + var(--safe-bottom));
+    transform: translateX(92px);
+    width: 68px;
     height: 28px;
     padding: 0 10px;
     border-radius: 999px;
   }
 
+  .qr-fab:hover,
+  .qr-fab:focus-visible,
+  .qr-fab.is-open {
+    transform: translateX(92px) translateY(-1px);
+  }
+
+  .qr-fab:active {
+    transform: translateX(92px) scale(.98);
+  }
+
   .qr-fab__label {
     font-size: 9px;
-    letter-spacing: .08em;
+    letter-spacing: .06em;
   }
 
   .qr-popover {
-    right: 12px;
-    bottom: calc(92px + var(--safe-bottom));
+    left: 50%;
+    right: auto;
+    bottom: calc(98px + var(--safe-bottom));
+    transform: translateX(18px);
     width: min(224px, calc(100vw - 24px));
+  }
+
+  @keyframes qrPopoverIn {
+    from { opacity: 0; transform: translateX(18px) translateY(8px) scale(.96); }
+    to { opacity: 1; transform: translateX(18px) translateY(0) scale(1); }
   }
 }
