@@ -441,11 +441,11 @@ a { color: inherit; }
 /* QR button */
 .qr-fab {
   position: fixed;
-  right: 16px;
-  bottom: calc(86px + var(--safe-bottom));
+  right: 12px;
+  bottom: calc(72px + var(--safe-bottom));
   z-index: 40;
-  width: 84px;
-  height: 36px;
+  width: 92px;
+  height: 32px;
   padding: 0 14px;
   display: inline-flex;
   align-items: center;
@@ -455,9 +455,9 @@ a { color: inherit; }
   background: linear-gradient(135deg, #6e8dff 0%, #4968fb 45%, #2946d7 100%);
   color: #f5f7ff;
   box-shadow:
-    0 14px 34px rgba(33,54,164,.28),
+    0 12px 28px rgba(33,54,164,.24),
     inset 0 1px 0 rgba(255,255,255,.26),
-    inset 0 -1px 0 rgba(13,27,110,.22);
+    inset 0 -1px 0 rgba(13,27,110,.18);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   cursor: pointer;
@@ -488,9 +488,9 @@ a { color: inherit; }
 .qr-fab.is-open {
   transform: translateY(-1px);
   box-shadow:
-    0 18px 40px rgba(33,54,164,.34),
+    0 16px 34px rgba(33,54,164,.30),
     inset 0 1px 0 rgba(255,255,255,.34),
-    inset 0 -1px 0 rgba(13,27,110,.28);
+    inset 0 -1px 0 rgba(13,27,110,.24);
 }
 
 .qr-fab:hover::before,
@@ -511,7 +511,7 @@ a { color: inherit; }
   justify-content: center;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: .18em;
+  letter-spacing: .12em;
   color: #f4f7ff;
   text-transform: uppercase;
   white-space: nowrap;
@@ -522,7 +522,7 @@ a { color: inherit; }
 .qr-popover {
   position: fixed;
   right: 18px;
-  bottom: calc(136px + var(--safe-bottom));
+  bottom: calc(122px + var(--safe-bottom));
   z-index: 45;
   width: min(248px, calc(100vw - 32px));
   padding: 14px 14px 12px;
@@ -678,21 +678,21 @@ a { color: inherit; }
 
   .qr-fab {
     right: 10px;
-    bottom: calc(90px + var(--safe-bottom));
-    width: 86px;
-    height: 34px;
-    padding: 0 14px;
+    bottom: calc(74px + var(--safe-bottom));
+    width: 88px;
+    height: 30px;
+    padding: 0 12px;
     border-radius: 999px;
   }
 
   .qr-fab__label {
-    font-size: 11px;
-    letter-spacing: .14em;
+    font-size: 10px;
+    letter-spacing: .1em;
   }
 
   .qr-popover {
     right: 12px;
-    bottom: calc(136px + var(--safe-bottom));
+    bottom: calc(124px + var(--safe-bottom));
     width: min(224px, calc(100vw - 24px));
   }
 }
