@@ -475,7 +475,7 @@ body.is-miniapp .qr-fab {
   left: 50%;
   right: auto;
   bottom: calc(52px + var(--safe-bottom));
-  transform: translateX(6px);
+  transform: translateX(-50%);
 }
 
 .qr-fab::before {
@@ -508,7 +508,7 @@ body:not(.is-miniapp) .qr-fab.is-open {
 body.is-miniapp .qr-fab:hover,
 body.is-miniapp .qr-fab:focus-visible,
 body.is-miniapp .qr-fab.is-open {
-  transform: translateX(6px) translateY(-1px);
+  transform: translateX(-50%) translateY(-1px);
   box-shadow:
     0 14px 30px rgba(53,83,234,.28),
     inset 0 1px 0 rgba(255,255,255,.40),
@@ -526,7 +526,7 @@ body:not(.is-miniapp) .qr-fab:active {
 }
 
 body.is-miniapp .qr-fab:active {
-  transform: translateX(6px) scale(.98);
+  transform: translateX(-50%) scale(.98);
 }
 
 .qr-fab__label {
@@ -729,17 +729,17 @@ body.is-miniapp .qr-popover {
     left: 50%;
     right: auto;
     bottom: calc(54px + var(--safe-bottom));
-    transform: translateX(4px);
+    transform: translateX(-50%);
   }
 
   body.is-miniapp .qr-fab:hover,
   body.is-miniapp .qr-fab:focus-visible,
   body.is-miniapp .qr-fab.is-open {
-    transform: translateX(4px) translateY(-1px);
+    transform: translateX(-50%) translateY(-1px);
   }
 
   body.is-miniapp .qr-fab:active {
-    transform: translateX(4px) scale(.98);
+    transform: translateX(-50%) scale(.98);
   }
 
   .qr-fab__label {
